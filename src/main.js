@@ -14,6 +14,8 @@ import 'element-ui/lib/theme-chalk/index.css';
 //导入总css样式 app.css
 import '@/assets/app.css'
 
+import '@/permission'
+
 import relativeTime from 'dayjs/plugin/relativeTime'
 //国际化
 import 'dayjs/locale/zh-cn'

@@ -1,5 +1,5 @@
-import { login,getUserInfo } from '@/api/auth/auth'
-import { getToken, setToken } from '@/utils/auth'
+import { getUserInfo, login, logout } from "@/api/auth/auth";
+import { getToken, setToken, removeToken } from "@/utils/auth";
 
 //state 中状态的改变必须通过mutations 来改变
 const state = {
@@ -56,9 +56,25 @@ const actions = {
         reject(error)
       })
     })
-  
+  },
 
-  }
+  // 注销
+  logout({ commit, state }) {
+    return new Promise((resolve, reject) => {
+      logout(state.token)
+        .then((response) => {
+          console.log(response);
+          commit("SET_TOKEN_STATE", "");
+          commit("SET_USER_STATE", "");
+          removeToken();
+          resolve();
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+
 }
 
 export default {

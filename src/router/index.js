@@ -38,6 +38,12 @@ const routes = [
   
 ]
 
+//重写push功能，出现异常不再捕捉
+const originalPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
+
 const router = new VueRouter({
   routes
 })

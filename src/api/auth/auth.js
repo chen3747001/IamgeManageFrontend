@@ -24,4 +24,14 @@ export function getUserInfo(){
       url:'/user/info',
       method:'get'
     })
-}
+  }
+
+//退出登录功能
+export function logout() {
+    return request({
+      url: '/user/logout'
+    })
+} 
+
+
+

@@ -5,7 +5,10 @@
     </div>
 
     <div class="columns">
-      <div class="column is-one-fifth">is-one-fifth</div>
+      
+      <div class="column is-one-fifth">
+        <NavigationBar></NavigationBar>
+      </div>
       <div class="column">Auto1213</div>
       <div class="column is-one-fifth">Auto</div>
     </div>
@@ -16,9 +19,11 @@
 <script>
 // @ is an alias to /src
 import {getBillboard} from "@/api/billboard"
+import NavigationBar from '@/components/layout/NavigationBar'
 
 export default {
   name: 'Home',
+  components:{NavigationBar},
   data() {
     return{
       billboard:{
@@ -43,3 +48,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  .column{
+    width:20%;
+  }
+</style>>

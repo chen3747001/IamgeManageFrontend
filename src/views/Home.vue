@@ -50,7 +50,5 @@ export default {
 </script>
 
 <style scoped>
-  .column{
-    width:20%;
-  }
+  
 </style>>

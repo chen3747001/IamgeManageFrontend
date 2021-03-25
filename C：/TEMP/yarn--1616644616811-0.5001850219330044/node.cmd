@@ -1,0 +1,1 @@
+@"F:\nodejs\node.exe"   %*

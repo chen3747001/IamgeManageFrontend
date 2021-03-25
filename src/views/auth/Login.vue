@@ -84,7 +84,7 @@ export default {
         if (valid) {
           this.loading = true;
           this.$store
-          //.dispatch("user/login", this.ruleForm) ：user/login 返回到user.js 中的login 函数中 ruleform 其中的数据
+          //.dispatch("user/login", this.ruleForm) ：user/login 返回到 store文件夹下 user.js 中的login 函数中 ruleform 其中的数据
             .dispatch("user/login", this.ruleForm)
             .then(() => {
               this.$message({
@@ -93,6 +93,7 @@ export default {
                 duration: 2000,
               });
 
+              this.$store.dispatch("user/getInfo")
 
               setTimeout(() => {
                 this.loading = false;

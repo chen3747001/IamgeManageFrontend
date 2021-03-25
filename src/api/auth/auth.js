@@ -16,4 +16,12 @@ export function login(data) {
       method: 'post',
       data
     })
-  }
+}
+
+//登录后获取用户信息
+export function getUserInfo(){
+    return request({
+      url:'/user/info',
+      method:'get'
+    })
+}

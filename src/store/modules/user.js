@@ -1,4 +1,4 @@
-import { login } from '@/api/auth/auth'
+import { login,getUserInfo } from '@/api/auth/auth'
 import { getToken, setToken } from '@/utils/auth'
 
 //state 中状态的改变必须通过mutations 来改变
@@ -11,6 +11,9 @@ const state = {
 const mutations = {
   SET_TOKEN_STATE: (state, token) => {
     state.token = token
+  },
+  SET_USER_STATE:(state,user)=>{
+    state.user=user
   }
 }
 
@@ -34,6 +37,28 @@ const actions = {
       })
     })
   },
+
+  // 获取用户信息
+  getInfo({ commit, state }) {
+    return new Promise((resolve, reject) => {
+      getUserInfo().then(response => {
+        const { data } = response
+        if (!data) {
+          commit('SET_TOKEN_STATE', '')
+          commit('SET_USER_STATE', '')
+          removeToken()
+          resolve()
+          reject('Verification failed, please Login again.')
+        }
+        commit('SET_USER_STATE', data)
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  
+
+  }
 }
 
 export default {

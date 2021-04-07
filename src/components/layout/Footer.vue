@@ -26,7 +26,7 @@
         </div>
       </div>
     </div>
-    <back-top></back-top>
+    <BackTop></BackTop>
   </footer>
 </template>
 

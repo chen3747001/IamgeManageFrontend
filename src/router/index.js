@@ -23,16 +23,30 @@ const routes = [
     component: () => import('@/views/auth/Login'),
     meta: { title: '登录' }
   },
+  //访问用户的数据集页面
   {
-    path:'/404',
-    name:'404',
+    name:'userData',
+    path:'/userData/:username/pictureSet',
+    component: () => import('@/views/userData/pictureSet'),
+    meta:{title:'我的'}
+  },
+  //创建数据集页面
+  {
+    name:"createPictureSet",
+    path:"/pictureSet/create",
+    component:()=> import('@/views/pictureSet/Create.vue'),
+    meta:{title:"创建数据集"}
+  },
+  {
+    path:'/error',
+    name:'error',
     component:()=>import('@/views/error/ErrorRequest'),
     meta:{title:'404-Notfound'}
   },
-  // 用户输入其他路由（无效路由），重定向到404页面
+  // 用户输入其他路由（无效路由），重定向到404-error页面
   {
     path:'/*',
-    redirect:'/404',
+    redirect:'/error',
     hidden:true
   }
   

@@ -13,7 +13,7 @@
 
 <script>
 export default {
-  name: "404",
+  name: "error",
   data() {
     return {
       times: 10

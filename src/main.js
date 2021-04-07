@@ -11,6 +11,9 @@ import 'buefy/dist/buefy.css'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 
+//格式化日期 date-fns
+import format from 'date-fns/format'
+
 //导入总css样式 app.css
 import '@/assets/app.css'
 
@@ -29,6 +32,11 @@ dayjs().locale('zh-cn').format
 
 //可以全局使用dayjs
 Vue.prototype.dayjs=dayjs;
+
+//date-fns
+Vue.filter('date', (date) => {
+  return format(new Date(date), 'yyyy-MM-dd')
+})
 
 Vue.use(Buefy);
 Vue.use(ElementUI);

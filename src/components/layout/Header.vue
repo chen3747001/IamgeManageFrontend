@@ -27,15 +27,15 @@
         </b-navbar-item>
         <b-navbar-item
           tag="router-link"
-          :to="{ path: '/' }"
+          :to="{ path: `/userData/${user.username}/pictureSet` }"
         >
-          我的资源
+          我的数据集
         </b-navbar-item>
         <b-navbar-item
           tag="router-link"
           :to="{ path: '/' }"
         >
-          公共资源
+          公共数据集
         </b-navbar-item>
       </template>
 

@@ -27,3 +27,5 @@ export default {
 .container {
   min-height: 200px;
 }
+
+</style>

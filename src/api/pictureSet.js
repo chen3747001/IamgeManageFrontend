@@ -8,3 +8,11 @@ export function createPictureSet(pictureSetDTO){
         data:pictureSetDTO
     })
 }
+
+//显示属于我的数据集
+export function showMyPictureSet(username){
+    return request({
+        url:'pictureSet/mySet',
+        method:"get",
+    })
+}

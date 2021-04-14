@@ -1,37 +1,73 @@
 <template>
     <div class="card">
         <div class="card-image">
-            <figure class="image  is-4by3">
-                <img src="@/assets/wolf.png" alt="Placeholder image">
-            </figure>
+              <figure class="image  is-4by3">
+                  <img :src="AvatarSrc">
+                  <!-- <img v-if="pictureSet.avatar!=null" :src="testurl"> -->
+                  <!-- <img v-else-if="pictureSet.avatar==null" src="@/assets/wolf.png" alt="Placeholder image"> -->
+                    <!-- <img src="@/assets/wolf.png" alt="Placeholder image"> -->
+              </figure>
+          </div>
+
+          <div class="card-content">
+
+              <div class="content">
+                  <p class="title is-4">{{item.name}}</p>
+                  <p>test</p>
+                  <p>one | two</p>
+              </div>
+
+              <div class="media">
+                  <div class="media-left">
+                      <figure class="image is-32x32">
+                          <img src="@/assets/logo.png" alt="Placeholder image">
+                      </figure>
+                  </div>
+                  <div class="media-content">
+                      <p class="title is-5">{{item.owner}}</p>
+                  </div>
+              </div>
+          </div>
         </div>
-
-        <div class="card-content">
-
-            <div class="content">
-                <p class="title is-4">test card</p>
-                <p>test</p>
-                <p>one | two</p>
-            </div>
-
-            <div class="media">
-                <div class="media-left">
-                    <figure class="image is-32x32">
-                        <img src="@/assets/logo.png" alt="Placeholder image">
-                    </figure>
-                </div>
-                <div class="media-content">
-                    <p class="title is-5">John Smith</p>
-                </div>
-            </div>
-    
-        </div>
-    </div>
 </template>
 
 <script>
+import {showPicture} from "@/api/picture"
 export default {
-  name: "Card"
+  name: "Card",
+  props:{
+      item:Object
+  },
+  data() {
+    return{
+        AvatarData:{},
+        AvatarSrc:null,
+    }
+  },
+
+  created(){
+    this.loadAvatar()
+  },
+
+   methods:{
+
+    //显示图片数据集的封面
+    loadAvatar(){
+        showPicture(this.item.avatar).then((res)=>{
+            const{data}=res
+            this.AvatarData=data
+
+            console.log("=  =   set name is :"+this.item.name+" , picture name is: "+this.AvatarData.picture_name+", its detail data is:")
+            console.log(data)
+
+            this.AvatarSrc='data:image/'+this.AvatarData.picture_kind+';base64,'+this.AvatarData.picture_detail
+        })
+      },
+    
+  
+
+  }
+  
 }
 </script>
 

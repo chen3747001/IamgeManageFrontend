@@ -17,9 +17,14 @@
             </b-button>
         </div>
 
+      <!-- 展示我的set -->
       <div class="cards-main">
-        <Card></Card>
-      </div>
+        <div v-for="(item, index) in mySet" :key="index">
+          <card :item="item"></card>
+        </div>
+        
+    </div>
+
     </div>
     </div>
 </template>
@@ -27,6 +32,7 @@
 <script>
 // @ is an alias to /src
 import NavigationBar from "@/components/layout/NavigationBar"
+import {showMyPictureSet} from "@/api/pictureSet"
 import Card from "@/components/Card.vue"
 
 export default {
@@ -34,16 +40,27 @@ export default {
   components:{NavigationBar,Card},
   data() {
     return{
+        mySet:{},
+        testurl:""
     }
   },
 
   created(){
-    this.fetchBillboard()
+    this.fetchSet()
   },
 
   methods:{
-    async fetchBillboard(){
-      }
+
+    //显示我的数据集
+    fetchSet(){
+      showMyPictureSet(this.$route.params.username).then((res) => {
+          const { data } = res
+          console.log("=  picture set list is:")
+          console.log(data)
+          this.mySet = data
+        })
+      },
+    
 
   }
 }
@@ -58,4 +75,6 @@ export default {
     width: 100%;
     height:1100px;
   }
-</style>>
+
+  
+</style>

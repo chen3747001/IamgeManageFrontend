@@ -12,6 +12,7 @@
       <div class="column is-9">
         <div class="cards-header">热度  时间</div>
         <div class="cards-main">
+          <!-- <Card></Card>
           <Card></Card>
           <Card></Card>
           <Card></Card>
@@ -19,8 +20,7 @@
           <Card></Card>
           <Card></Card>
           <Card></Card>
-          <Card></Card>
-          <Card></Card>
+          <Card></Card> -->
         </div>
         
       </div>

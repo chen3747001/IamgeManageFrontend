@@ -6,6 +6,9 @@ import axios from 'axios'
 import VueAxios from "vue-axios";
 
 Vue.use(VueAxios,axios)
+
+//font-awesome
+import './assets/plugins/font-awesome-4.7.0/css/font-awesome.min.css'
 //Buefy
 import Buefy from 'buefy'
 import 'buefy/dist/buefy.css'

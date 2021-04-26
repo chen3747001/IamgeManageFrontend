@@ -16,3 +16,14 @@ export function showMyPictureSet(username){
         method:"get",
     })
 }
+
+
+//显示属于我的数据集
+//展示列表 pageNo 页号 size 尺寸 tab 显示那种主题
+export function showMyPictureSetTest(pageNo,size,tab){
+    return request({
+        url:'pictureSet/mySetTest',
+        method:"get",
+        params:{pageNo:pageNo,size:size,tab:tab}
+    })
+}

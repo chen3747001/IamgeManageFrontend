@@ -3,9 +3,6 @@
         <div class="card-image">
               <figure class="image  is-4by3">
                   <img :src="AvatarSrc">
-                  <!-- <img v-if="pictureSet.avatar!=null" :src="testurl"> -->
-                  <!-- <img v-else-if="pictureSet.avatar==null" src="@/assets/wolf.png" alt="Placeholder image"> -->
-                    <!-- <img src="@/assets/wolf.png" alt="Placeholder image"> -->
               </figure>
           </div>
 
@@ -38,15 +35,21 @@ export default {
   props:{
       item:Object
   },
+  watch: {
+    item: {
+        immediate: true,
+        handler (val) {
+            this.loadAvatar();
+        },
+        deep: true
+    }
+    },
+
   data() {
     return{
         AvatarData:{},
         AvatarSrc:null,
     }
-  },
-
-  created(){
-    this.loadAvatar()
   },
 
    methods:{
@@ -73,9 +76,11 @@ export default {
 
 <style scoped>
     .card{
-        width:30%;
-        margin-right: 3%;
+        width:29%;
+        margin-left: 2%;
+        margin-right: 2%;
         margin-top:3%;
+        margin-bottom:3% ;
         float: left;
         max-height: 30%;
     }

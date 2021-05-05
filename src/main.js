@@ -6,7 +6,6 @@ import axios from 'axios'
 import VueAxios from "vue-axios";
 
 Vue.use(VueAxios,axios)
-
 //font-awesome
 import './assets/plugins/font-awesome-4.7.0/css/font-awesome.min.css'
 //Buefy
@@ -43,6 +42,8 @@ Vue.prototype.dayjs=dayjs;
 Vue.filter('date', (date) => {
   return format(new Date(date), 'yyyy-MM-dd')
 })
+
+import 'material-design-icons/iconfont/material-icons.css'
 
 Vue.use(Buefy);
 Vue.use(ElementUI);

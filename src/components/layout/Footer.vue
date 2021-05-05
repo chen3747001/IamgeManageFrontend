@@ -15,7 +15,7 @@
       </div>
 
       <div>
-        <span>{{ title }} ALL RIGHTS RESERVED</span>
+        <span>{{ title }} created</span>
         <div style="float: right">
           <template>
             <b-taglist attached>
@@ -39,8 +39,8 @@ export default {
   },
   data() {
     return {
-      title: "© " + new Date().getFullYear() + ' 豆约翰',
-      author: '豆约翰',
+      title: "© " + new Date().getFullYear() + ' CHEN',
+      author: 'CHEN',
     };
   },
 };

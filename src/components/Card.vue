@@ -1,35 +1,38 @@
 <template>
-    <div class="card">
-        <div class="card-image">
-              <figure class="image  is-4by3">
-                  <img :src="AvatarSrc">
-              </figure>
-          </div>
+    <!-- 设置跳转的路径 -->
+    <router-link :to="{name:'PictureSetDetail',params:{SetName:item.name}}" >
+        <div class="card" >
+            <div class="card-image">
+                <figure class="image  is-4by3">
+                    <img :src="AvatarSrc">
+                </figure>
+            </div>
 
-          <div class="card-content">
+            <div class="card-content">
 
-              <div class="content">
-                  <p class="title is-4">{{item.name}}</p>
-                  <p>test</p>
-                  <p>one | two</p>
-              </div>
+                <div class="content">
+                    <p class="title is-4">{{item.name}}</p>
+                    <p>test</p>
+                    <p>one | two</p>
+                </div>
 
-              <div class="media">
-                  <div class="media-left">
-                      <figure class="image is-32x32">
-                          <img src="@/assets/logo.png" alt="Placeholder image">
-                      </figure>
-                  </div>
-                  <div class="media-content">
-                      <p class="title is-5">{{item.owner}}</p>
-                  </div>
-              </div>
-          </div>
-        </div>
+                <div class="media">
+                    <div class="media-left">
+                        <figure class="image is-32x32">
+                            <img src="@/assets/logo.png" alt="Placeholder image">
+                        </figure>
+                    </div>
+                    <div class="media-content">
+                        <p class="title is-5">{{item.owner}}</p>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </router-link>
 </template>
 
 <script>
-import {showPicture} from "@/api/picture"
+import {showAvatar} from "@/api/picture"
 export default {
   name: "Card",
   props:{
@@ -56,7 +59,7 @@ export default {
 
     //显示图片数据集的封面
     loadAvatar(){
-        showPicture(this.item.avatar).then((res)=>{
+        showAvatar(this.item.avatar).then((res)=>{
             const{data}=res
             this.AvatarData=data
 

@@ -34,9 +34,31 @@ const routes = [
   {
     name:"createPictureSet",
     path:"/pictureSet/create",
-    component:()=> import('@/views/pictureSet/Create.vue'),
+    component:()=> import('@/views/pictureSet/Create'),
     meta:{title:"创建数据集"}
   },
+  //数据集详情页面
+  {
+    name:"PictureSetDetail",
+    path:"/pictureSet/detail/:SetName",
+    component:()=>import('@/views/pictureSet/Detail'),
+    meta:{title:"数据集详情页面"}
+  },
+  //图片数据管理页面
+  {
+    name:"ManageData",
+    path:"/pictureSet/manageData/:SetName",
+    component:()=>import('@/views/pictureSet/ManageData'),
+    meta:{title:"管理数据页面"}
+  },
+  //上传图片数据页面
+  {
+    name:"UploadData",
+    path:"/pictureSet/uploadData/:SetName",
+    component:()=>import('@/views/pictureSet/UploadData'),
+    meta:{title:"管理数据页面"}
+  },
+  //请求错误页面
   {
     path:'/error',
     name:'error',

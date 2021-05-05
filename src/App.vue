@@ -25,7 +25,7 @@ export default {
 </script>
 <style scoped>
 .container {
-  min-height: 200px;
+  min-height: 425px;
 }
 
 </style>

@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import {getPictureInformation,showPicture,deletePictureList} from "@/api/picture"
+  import {getPictureInformation,showPicture,deletePictureList} from "@/api/picture"
   export default {
     name: 'ManageData',
     watch: {

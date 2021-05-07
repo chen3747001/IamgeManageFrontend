@@ -27,3 +27,14 @@ export function showMyPictureSetTest(pageNo,size,tab){
         params:{pageNo:pageNo,size:size,tab:tab}
     })
 }
+
+//获得对应名称的数据集的信息
+export function getSetInformationByName(name){
+    return request({
+        url:'pictureSet/getSetInformationByName',
+        method:'get',
+        params: {
+            setName: name
+          }
+    })
+}

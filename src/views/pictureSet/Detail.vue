@@ -19,10 +19,20 @@
                 </div>
             </div>
             <div style="float:right;margin-top:20px;width:200px">
+                <el-dropdown style="float:right;width:150px" @command="handleCommand">
+                    <el-button type="primary">
+                        更多操作<i class="el-icon-arrow-down el-icon--right"></i>
+                    </el-button>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item command="manage">管理数据</el-dropdown-item>
+                        <el-dropdown-item command="download">下载数据</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
                 <!-- 设置跳转的路径 -->
-                <router-link :to="{name:'ManageData',params:{SetName:SetName}}" >
+                <!-- <router-link :to="{name:'ManageData',params:{SetName:SetName}}" >
                     <el-button type="primary" style="float:right;width:150px">管理数据</el-button>
                 </router-link>
+                    <el-button type="primary" style="float:right;width:150px" @click="downLoadSet">下载数据</el-button> -->
                 
             </div>
         </div>
@@ -93,7 +103,8 @@
 
 <script>
     import {getPictureInformation,showPicture} from "@/api/picture"
-    import {getSetInformationByName} from "@/api/pictureSet"
+    import {getSetInformationByName,downloadSet} from "@/api/pictureSet"
+    import axios from 'axios'
     
     export default {
         name: 'PictureSetDetail',
@@ -174,6 +185,37 @@
                     this.tableData=data
                     console.log("执行了一次查找所有图片操作")
                     console.log(this.tableData)
+                })
+            },
+
+            //下拉菜单的操作
+            handleCommand(command) {
+                // this.$message('click on item ' + command);
+                if(command=="manage"){
+                    this.$router.push({name:'ManageData',params:{SetName:this.SetName}})
+                }
+                else if(command=="download"){
+                    this.downLoadSet()
+                }
+            },
+
+            //下载该数据集的内容
+            downLoadSet(){
+                console.log("开始下载")
+
+                axios({
+                    method:"post",
+                    responseType:'blob',
+                    url:'http://127.0.0.1:8000/pictureSet/downloadSet/',
+                    withCredentials:false,
+                    timeout: 5 * 1000,
+                    params:{
+                        setName:this.SetName
+                    }
+                }).then((res)=>{
+                    let blob = new Blob([res.data], {type: "application/zip"});  
+                    let objectUrl = URL.createObjectURL(blob);
+                    window.location.href = objectUrl;
                 })
             },
 

@@ -27,9 +27,9 @@
               ></el-input>
             </el-form-item>
 
-            <el-form-item label="记住" prop="delivery">
+            <!-- <el-form-item label="记住" prop="delivery">
               <el-switch v-model="ruleForm.rememberMe"></el-switch>
-            </el-form-item>
+            </el-form-item> -->
 
             <el-form-item>
               <el-button type="primary" @click="submitForm('ruleForm')"

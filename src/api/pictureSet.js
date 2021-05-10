@@ -38,3 +38,14 @@ export function getSetInformationByName(name){
           }
     })
 }
+
+//下载对应数据集的信息
+export function downloadSet(name){
+    return request({
+        url:'pictureSet/downloadSet',
+        method:'post',
+        params:{
+            setName:name
+        }
+    })
+}

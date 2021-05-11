@@ -58,6 +58,20 @@ const routes = [
     component:()=>import('@/views/pictureSet/UploadData'),
     meta:{title:"管理数据页面"}
   },
+  //个人主页页面
+  {
+    name:"UserHomePage",
+    path:"/user/homePage",
+    component:()=>import('@/views/userData/HomePage'),
+    meta:{title:"个人中心"}
+  },
+  //个人信息修改页面
+  {
+    name:"ChangeMessage",
+    path:"user/changeMessage",
+    component:()=>import('@/views/userData/ChangeMessage'),
+    meta:{title:"个人中心"}
+  },
   //请求错误页面
   {
     path:'/error',

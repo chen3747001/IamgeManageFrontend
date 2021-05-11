@@ -33,5 +33,14 @@ export function logout() {
     })
 } 
 
+//修改用户信息
+export function updateUserInformation(updateUserDTO){
+    return request({
+      url:"/user/updateUserInformation",
+      method:"post",
+      data:updateUserDTO
+    })
+}
+
 
 

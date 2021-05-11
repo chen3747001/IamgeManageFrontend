@@ -50,3 +50,12 @@ export function uploadPicture(pictureDataDTO){
         //   }
     })
 }
+
+//修改头像(用户/团队)
+export function updateAvatar(changeAvatarDTO){
+    return request({
+        method:'post',
+        url:'picture/updateAvatar',
+        data:changeAvatarDTO
+    })
+}

@@ -1,12 +1,11 @@
 <template>
     <div class="columns">
-        <div  class="column is-4">
-            {{user.username}}
+        <div  class="changeForm">
             <div class="avatar">
                 <b-upload v-model="dropFile" drag-drop expanded>
                     <section class="section">
                         <div class="content has-text-centered">
-                            <p>将文件拖拽至此处或者点击上传</p>
+                            <p>修改头像，将文件拖拽至此处或者点击上传</p>
                         </div>
                     </section>
                 </b-upload>
@@ -17,7 +16,7 @@
                         <button class="delete is-small" type="button" @click="deleteDropFile()"></button>
                     </span>
                 </div>
-                <el-button type="primary" style="float:center;width:150px;margin-left:98px"  @click="submit($event)">提交</el-button>
+                <el-button type="primary" style="float:center;width:150px;margin-left:230px;margin-bottom:20px;"  @click="submit($event)">提交</el-button>
 
                 <!-- <figure class="image is-square">
                     <img :src="PictureSrc">
@@ -54,20 +53,18 @@
                     
 
                     <el-form-item>
-                    <el-button
-                        type="primary"
-                        @click="submitForm('ruleForm')"
-                    >提交修改</el-button>
-                    <el-button @click="resetForm('ruleForm')">返回</el-button>
+                        <el-button
+                            type="primary"
+                            @click="submitForm('ruleForm')"
+                        >提交修改</el-button>
+                        <el-button @click="resetForm('ruleForm')">返回</el-button>
                     </el-form-item>
                 </el-form>
                 
             </div>
         </div>
 
-        <div class="column is-8">
-            2651561
-        </div>
+        
     </div>
 </template>
 
@@ -149,7 +146,7 @@ export default {
                     const { code, message } = value
                     if (code === 200) {
                         this.$message({
-                        message: '修改用户信息成功',
+                        message: '新建团队',
                         type: 'success'
                         })
                         setTimeout(() => {
@@ -169,43 +166,23 @@ export default {
                 }
             })
             },
-            resetForm(formName) {
-                this.$router.push({name:"UserHomePage"})
-            }
+        resetForm(formName) {
+            this.$router.push({name:"UserHomePage"})
+        }
     }
 }
 </script>
 
 <style scoped>
-    .avatar{
-        width: 100%;
-        height: 200px;
-    }
-
-    .introdutionMiddle{
-        width: 100%;
-        height: 100px;
-    }
-
-    .introduction{
-        width: 100%;
-    }
-
-    .introductionItem{
-        margin-top: 20px;
-        font-size: 18;
-        font-weight: 600;
-    }
-
-    .introductionValue{
-        margin-top: 10px;
-        margin-left: 5px;
-        font-size: 16;
-        font-weight: 300;
-    }
-
-    .avatarPic{
-        margin-top: 70px;
-        margin-left: 93px;
+    .changeForm{
+        margin-top: 50px;
+        width: 60%;
+        margin-left: 20%;
+        padding-left: 10px;
+        padding-right: 40px;
+        padding-top: 40px;
+        padding-bottom: 15px;
+        background-color: rgba(240, 255, 255, 0.7);
+ 	    border-radius: 40px;
     }
 </style>

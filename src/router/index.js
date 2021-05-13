@@ -72,6 +72,13 @@ const routes = [
     component:()=>import('@/views/userData/ChangeMessage'),
     meta:{title:"个人中心"}
   },
+  //新建团队页面
+  {
+    name:"createTeam",
+    path:"team/createTeam",
+    component:()=>import('@/views/team/CreateTeam'),
+    meta:{title:"新建团队"},
+  },
   //请求错误页面
   {
     path:'/error',

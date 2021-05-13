@@ -28,3 +28,21 @@ export function getTeamByMemberNamePage(pageNo,size){
         params:{pageNo:pageNo,size:size}
     })
 }
+
+//根据团队名返回团队信息
+export function getTeamByTeamName(teamName){
+    return request({
+        url:"/team/getTeamByTeamName",
+        method:"get",
+        params:{teamName:teamName}
+    })
+}
+
+//修改团队信息
+export function updateTeamInformation(teamName,bio,email){
+    return request({
+        url:"/team/updateInformation",
+        method:"post",
+        params:{teamName:teamName,bio:bio,email:email}
+    })
+}

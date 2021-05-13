@@ -33,6 +33,13 @@
         </b-navbar-item>
         <b-navbar-item
           tag="router-link"
+          :to="{ path: 'user/homePage' }"
+        >
+          我的团队
+        </b-navbar-item>
+
+        <b-navbar-item
+          tag="router-link"
           :to="{ path: '/' }"
         >
           公共数据集

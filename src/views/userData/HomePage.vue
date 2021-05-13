@@ -43,16 +43,16 @@
 
         <div class="column is-9">
             <el-tabs v-model="tabName" @tab-click="selectTab">
-                <el-tab-pane label="收藏" name="collect" >
-                    asdasdsa
-                </el-tab-pane>
                 <el-tab-pane label="团队" name="team">
                     <div style="width:100%;height:50px;">
                         <el-button type="primary" style="width:150px;float:right" @click="toCreateTeamPage">新建团队</el-button>
                     </div>
                     <div style="width:100%">
                         <div v-for="(item, index) in teamData" :key="index">
-                            <teamCard :item="item" style="width:100%"></teamCard>
+                            <!-- 设置点击team card的跳转路由 -->
+                            <router-link :to="{name:'teamHomePage',params:{teamName:item.name}}" >
+                                <teamCard :item="item" style="width:100%"></teamCard>
+                            </router-link>
                         </div>
 
                         <p>分页</p>
@@ -67,6 +67,9 @@
                         <!-- <p>asdawd</p> -->
                         <!-- <teamCard></teamCard> -->
                     </div>
+                </el-tab-pane>
+                <el-tab-pane label="收藏" name="collect" >
+                    asdasdsa
                 </el-tab-pane>
             </el-tabs>
         </div>
@@ -87,7 +90,7 @@ export default {
             // PictureSrc:null,
             PictureSrc:require('@/assets/logo.png'),
             AvatarData:{},
-            tabName:"collect",
+            tabName:"team",
             teamData:[],
             page: {
                 current: 1,
@@ -138,12 +141,6 @@ export default {
         //根据用户名获得团队信息
         getTeamByMemberName(){
             console.log("开始获得team信息")
-            // getTeamByMemberName().then((res)=>{
-            //     const{data}=res
-            //     this.teamData=data
-
-            //     console.log("team 的信息是："+this.teamData[0].name+this.teamData[1].name)
-            // })
             getTeamByMemberNamePage(this.page.current, this.page.size).then((response) => {
                 const { data } = response
                 this.page.current = data.current

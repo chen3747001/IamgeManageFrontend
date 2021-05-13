@@ -70,7 +70,7 @@ const routes = [
     name:"ChangeMessage",
     path:"user/changeMessage",
     component:()=>import('@/views/userData/ChangeMessage'),
-    meta:{title:"个人中心"}
+    meta:{title:"个人信息修改"}
   },
   //新建团队页面
   {
@@ -78,6 +78,20 @@ const routes = [
     path:"team/createTeam",
     component:()=>import('@/views/team/CreateTeam'),
     meta:{title:"新建团队"},
+  },
+  //团队详情页面
+  {
+    name:"teamHomePage",
+    path:"team/homePage",
+    component:()=>import('@/views/team/HomePage'),
+    meta:{title:"团队详情页面"},
+  },
+  //团队信息修改页面
+  {
+    name:"teamChangeMessage",
+    path:"team/changeMessage",
+    component:()=>import('@/views/team/ChangeMessage'),
+    meta:{title:"团队信息修改"}
   },
   //请求错误页面
   {

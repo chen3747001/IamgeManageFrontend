@@ -68,35 +68,35 @@ const routes = [
   //个人信息修改页面
   {
     name:"ChangeMessage",
-    path:"user/changeMessage",
+    path:"/user/changeMessage",
     component:()=>import('@/views/userData/ChangeMessage'),
     meta:{title:"个人信息修改"}
   },
   //新建团队页面
   {
     name:"createTeam",
-    path:"team/createTeam",
+    path:"/team/createTeam",
     component:()=>import('@/views/team/CreateTeam'),
     meta:{title:"新建团队"},
   },
   //团队详情页面
   {
     name:"teamHomePage",
-    path:"team/homePage",
+    path:"/team/homePage",
     component:()=>import('@/views/team/HomePage'),
     meta:{title:"团队详情页面"},
   },
   //团队信息修改页面
   {
     name:"teamChangeMessage",
-    path:"team/changeMessage",
+    path:"/team/changeMessage",
     component:()=>import('@/views/team/ChangeMessage'),
     meta:{title:"团队信息修改"}
   },
   //跳转到管理成员页面
   {
     name:"teamMemberManage",
-    path:"team/memberManage",
+    path:"/team/memberManage",
     component:()=>import('@/views/team/MemberManage'),
     meta:{title:"管理成员页面"}
   },

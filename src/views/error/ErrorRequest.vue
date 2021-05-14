@@ -16,7 +16,7 @@ export default {
   name: "error",
   data() {
     return {
-      times: 10
+      times: 4
     }
   },
   created() {

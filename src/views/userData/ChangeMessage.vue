@@ -146,7 +146,7 @@ export default {
                     const { code, message } = value
                     if (code === 200) {
                         this.$message({
-                        message: '新建团队',
+                        message: '修改个人信息成功',
                         type: 'success'
                         })
                         setTimeout(() => {

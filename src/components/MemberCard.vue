@@ -7,7 +7,7 @@
             
         </div>
         <div class="introduction">
-            <p style="font-weight:500">{{item.name}}</p>
+            <p style="font-weight:400">{{item.memberName}}</p>
             <p style="font-weight:100">{{item.bio}}</p>
         </div>
     </div>
@@ -16,7 +16,7 @@
 <script>
 import {showAvatar} from "@/api/picture"
 export default {
-    name:"teamCard",
+    name:"memberCard",
     props:{
       item:Object
     },

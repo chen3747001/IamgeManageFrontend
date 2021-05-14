@@ -41,22 +41,22 @@
                 </el-tab-pane>
                 <el-tab-pane label="成员" name="teamMember">
                     <div style="width:100%;height:50px;">
-                        <!-- <el-button type="primary" style="width:150px;float:right" @click="toCreateTeamPage">新建团队</el-button> -->
+                        <el-button type="primary" style="width:150px;float:right" @click="toManageMemberPage">管理成员</el-button>
                     </div>
                     <div style="width:100%">
-                        <!-- <div v-for="(item, index) in teamData" :key="index">
-                            
-                        </div> -->
+                        <div v-for="(item, index) in teamMemberData" :key="index">
+                            <memberCard :item="item" style="width:100%"></memberCard>
+                        </div>
 
-                        <!-- <p>分页</p> -->
                         <!--分页-->
-                        <!-- <Pagination
+                        <p>分页</p>
+                        <Pagination
                             v-show="page.total > 1"
                             :total="page.total"
                             :page.sync="page.current"
                             :limit.sync="page.size"
-                            @pagination="getTeamByMemberName"
-                        /> -->
+                            @pagination="getTeamMember"
+                        />
                         <!-- <p>asdawd</p> -->
                         <!-- <teamCard></teamCard> -->
                     </div>
@@ -70,14 +70,18 @@ import { mapGetters } from 'vuex'
 import Pagination from '@/components/Pagination'
 import {showAvatar} from "@/api/picture"
 import {getTeamByTeamName} from "@/api/team"
+import {getMemberByTeamName} from "@/api/teamMember"
+import memberCard from "@/components/MemberCard.vue"
+
 export default {
     name:"teamHomePage",
-    components:{Pagination},
+    components:{Pagination,memberCard},
     data(){
         return{
             teamName:this.$route.params.teamName,
             tabName:"set",
             teamData:"",
+            teamMemberData:[],
             PictureSrc:require('@/assets/logo.png'),
             AvatarData:{},
             page: {
@@ -89,6 +93,7 @@ export default {
     },
     created(){
         this.getTeamByTeamName()
+        this.getTeamMember()
     },
     computed: {
         ...mapGetters(['token', 'user'])
@@ -112,10 +117,30 @@ export default {
             })
         },
 
+        //根据团队名获得团队成员信息
+        getTeamMember(){
+            console.log("开始获得teamMember信息")
+            getMemberByTeamName(this.page.current, this.page.size,this.teamName).then((response) => {
+                const { data } = response
+                this.page.current = data.current
+                this.page.total = data.total
+                this.page.size = data.size
+                this.teamMemberData = data.records
+                
+                // console.log(this.mySet)
+            })
+        },
+
         //跳转到修改团队信息页面
         changeTeamInformation(){
             console.log("修改团队信息")
             this.$router.push({name:"teamChangeMessage",params:{teamName:this.teamName}})
+        },
+
+        //跳转到管理成员页面
+        toManageMemberPage(){
+            console.log("跳转到管理成员页面")
+            this.$router.push({name:"teamMemberManage",params:{teamName:this.teamName}})
         },
 
         //显示图片数据集的封面

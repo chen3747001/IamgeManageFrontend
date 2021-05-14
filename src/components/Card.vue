@@ -3,8 +3,8 @@
     <router-link :to="{name:'PictureSetDetail',params:{SetName:item.name}}" >
         <div class="card" >
             <div class="card-image">
-                <figure class="image  is-4by3">
-                    <img :src="AvatarSrc">
+                <figure class="image  is-3by3">
+                    <img :src="AvatarSrc" class="avatarPic">
                 </figure>
             </div>
 
@@ -19,7 +19,7 @@
                 <div class="media">
                     <div class="media-left">
                         <figure class="image is-32x32">
-                            <img src="@/assets/logo.png" alt="Placeholder image">
+                            <img  src="@/assets/logo.png" alt="Placeholder image">
                         </figure>
                     </div>
                     <div class="media-content">
@@ -94,8 +94,14 @@ export default {
     }
 
     .card:hover{
-        box-shadow: 10px 10px 20px 10px rgba(3, 3, 3, 0.5); 
+        box-shadow: 5px 5px 5px 20px rgba(175, 174, 240, 0.2); 
             /* 盒子向上移动效果，改变上外边距 */
         
+    }
+
+    /* 添加了移动到该card后，图片放大效果 */
+    .card:hover .avatarPic{
+        transition: .5s transform;
+        transform: scale(1.25);
     }
 </style> 

@@ -93,6 +93,13 @@ const routes = [
     component:()=>import('@/views/team/ChangeMessage'),
     meta:{title:"团队信息修改"}
   },
+  //跳转到管理成员页面
+  {
+    name:"teamMemberManage",
+    path:"team/memberManage",
+    component:()=>import('@/views/team/MemberManage'),
+    meta:{title:"管理成员页面"}
+  },
   //请求错误页面
   {
     path:'/error',

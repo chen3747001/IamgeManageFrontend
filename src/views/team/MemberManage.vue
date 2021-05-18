@@ -1,6 +1,9 @@
 <template>
     <div style="width:100%">
-        <p>member manage--{{teamName}}</p>
+        <!-- <p>member manage--{{teamName}}</p> -->
+        <div style="width:80%;height:50px;margin_botton:-50px">
+                <el-button type="primary" style="width:100px;float:right" @click="toHomePage">返回</el-button>
+        </div>
         <div class="tableMain">
 
             <el-table
@@ -170,19 +173,15 @@ export default {
             console.log("编辑"+row.memberName+row.ableDelete)
             this.dialogFormVisible=true
             this.updateForm.memberName=row.memberName
-            this.updateForm.ableDelete=row.ableDelete
-            this.updateForm.ableAdd=row.ableAdd
-            this.updateForm.ableCreateSet=row.ableCreateSet
-            this.updateForm.ableDeleteSet=row.ableDeleteSet
         },
 
         //提交修改的用户权力
         submitChange(){
             console.log("提交修改"+this.updateForm.teamName+this.updateForm.memberName)
-            console.log("ableDelete"+this.updateForm.ableDelete)
-            console.log("ableAdd"+this.updateForm.ableAdd)
-            console.log("ableCreateSet"+this.updateForm.ableCreateSet)
-            console.log("ableDeleteSet"+this.updateForm.ableDeleteSet)
+            // console.log("ableDelete"+this.updateForm.ableDelete)
+            // console.log("ableAdd"+this.updateForm.ableAdd)
+            // console.log("ableCreateSet"+this.updateForm.ableCreateSet)
+            // console.log("ableDeleteSet"+this.updateForm.ableDeleteSet)
             // 最后关闭 修改框
             this.dialogFormVisible = false
 
@@ -199,6 +198,12 @@ export default {
                     this.$message.error("修改权限失败，"+message)
                 }
             })
+        },
+
+        //跳转回团队页面
+        toHomePage(){
+            console.log("跳转到管理成员页面")
+            this.$router.push({name:"teamHomePage",params:{teamName:this.teamName}})
         }
     }
 }

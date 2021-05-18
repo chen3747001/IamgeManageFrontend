@@ -3,7 +3,7 @@
     <router-link :to="{name:'PictureSetDetail',params:{SetName:item.name}}" >
         <div class="card" >
             <div class="card-image">
-                <figure class="image  is-3by3">
+                <figure class="image  is-3by3" >
                     <img :src="AvatarSrc" class="avatarPic">
                 </figure>
             </div>
@@ -12,14 +12,14 @@
 
                 <div class="content">
                     <p class="title is-4">{{item.name}}</p>
-                    <p>test</p>
-                    <p>one | two</p>
+                    <p>{{item.scenario}}</p>
+                    <p>{{item.dataKind}}</p>
                 </div>
 
                 <div class="media">
                     <div class="media-left">
                         <figure class="image is-32x32">
-                            <img  src="@/assets/logo.png" alt="Placeholder image">
+                            <img  :src="ownerAvatarSrc">
                         </figure>
                     </div>
                     <div class="media-content">
@@ -33,6 +33,7 @@
 
 <script>
 import {showAvatar} from "@/api/picture"
+import {getUserInformation} from "@/api/auth/auth"
 export default {
   name: "Card",
   props:{
@@ -42,7 +43,7 @@ export default {
     item: {
         immediate: true,
         handler (val) {
-            this.loadAvatar();
+            this.loadAvatar()
         },
         deep: true
     }
@@ -52,6 +53,9 @@ export default {
     return{
         AvatarData:{},
         AvatarSrc:null,
+        ownerAvatarData:{},
+        ownerAvatarSrc:null,
+        ownerData:"",
     }
   },
 
@@ -67,6 +71,32 @@ export default {
             console.log(data)
 
             this.AvatarSrc='data:image/'+this.AvatarData.picture_kind+';base64,'+this.AvatarData.picture_detail
+            this.getOwnerInformation()
+        })
+      },
+
+    //获得拥有者的信息
+    getOwnerInformation(){
+        getUserInformation(this.item.owner).then((res)=>{
+            const{code,data,message}=res
+            this.ownerData=data
+
+            console.log("owner name is : "+this.ownerData.username+" its avatar is : "+this.ownerData.avatar)
+            console.log(this.ownerData)
+            this.loadOwnerAvatar()
+        })
+    },
+
+    //显示图片数据集拥有者的头像
+    loadOwnerAvatar(){
+        showAvatar(this.ownerData.avatar).then((res)=>{
+            const{data}=res
+            this.ownerAvatarData=data
+
+            console.log("=  =   owner name is :"+this.item.name+" , picture name is: "+this.ownerAvatarData.picture_name+", its detail data is:")
+            console.log(data)
+
+            this.ownerAvatarSrc='data:image/'+this.ownerAvatarData.picture_kind+';base64,'+this.ownerAvatarData.picture_detail
         })
       },
     
@@ -103,5 +133,10 @@ export default {
     .card:hover .avatarPic{
         transition: .5s transform;
         transform: scale(1.25);
+    }
+
+    .avatarPic{
+        width:233px;
+        height:233px;
     }
 </style> 

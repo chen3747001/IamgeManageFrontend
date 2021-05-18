@@ -2,11 +2,49 @@
 <template>
     <div class="columns">
       
+      <!-- 搜索条件设置 -->
       <div class="column is-3">
-        <NavigationBar></NavigationBar>
+        <!-- <NavigationBar></NavigationBar> -->
+        <p class="searchP" ><i class="el-icon-s-check"></i>  应用场景</p>
+          <el-radio v-model="scenario" label="" border class="seachRadio">所有</el-radio><br>
+          <el-radio v-model="scenario" label="science" border class="seachRadio">科研用</el-radio><br>
+          <el-radio v-model="scenario" label="family" border class="seachRadio">家用</el-radio><br>
+          <el-radio v-model="scenario" label="mixed" border class="seachRadio">混合的</el-radio><br>
+
+        <p class="searchP"><i class="el-icon-s-data"></i>  数据分类</p>
+          <el-radio v-model="dataKind" label="" border class="seachRadio">所有</el-radio><br>
+          <el-radio v-model="dataKind" label="game" border class="seachRadio">游戏</el-radio><br>
+          <el-radio v-model="dataKind" label="people" border class="seachRadio">人物</el-radio><br>
+          <el-radio v-model="dataKind" label="scene" border class="seachRadio">景色</el-radio><br>
+          <el-radio v-model="dataKind" label="photograph" border class="seachRadio">照片</el-radio><br>
+          <el-radio v-model="dataKind" label="cartoon" border class="seachRadio">卡通</el-radio><br>
+          <el-radio v-model="dataKind" label="mixed" border class="seachRadio">混合的</el-radio><br>
+
       </div>
+
+      <!-- 数据集的显示 -->
       <div class="column is-9">
         <div class="cards-header">
+            <div class="searchInput">
+              <div style="float:left;width:250px;">
+                <p class="control has-icons-left" >
+                  <input class="input is-link" type="text" v-model="searchName" placeholder="输入数据集名称">
+                  <span class="icon is-left">
+                    <i class="el-icon-s-check"></i>
+                  </span>
+                </p>
+              </div>
+              <div style="float:left;width:100px;">
+                <p class="control" >
+                  <b-button
+                    type="is-link"
+                    @click="search()"
+                  >搜索
+                  </b-button>
+                </p>
+              </div>
+            </div>
+
             <b-button
               type="is-link"
               style="float:right"
@@ -67,13 +105,18 @@ export default {
           size: 3,
           total: 0,
           tab: 'hot'
-      },
+        },
+
+        // 数据集显示的选择条件
+        scenario:"",
+        dataKind:"",
+        searchName:"",
     }
   },
 
   created(){
     // this.fetchSet()
-    this.init(this.tab)
+    this.init()
   },
 
   methods:{
@@ -87,13 +130,15 @@ export default {
     //   //     this.mySet = data
     //   //   })
     //   },
-    init(tab) {
-      showMyPictureSetTest(this.page.current, this.page.size,this.page.tab).then((response) => {
+    init() {
+      showMyPictureSetTest(this.page.current, this.page.size,this.page.tab,this.scenario,this.dataKind,this.searchName).then((response) => {
         const { data } = response
         this.page.current = data.current
         this.page.total = data.total
         this.page.size = data.size
         this.mySet = data.records
+
+        // console.log(this.mySet)
         // console.log(this.mySet)
       })
     },
@@ -104,8 +149,13 @@ export default {
       this.init(tab);
 
       // console.log("选择的类别是："+tab.name);
-    }
+    },
     
+    //根据输入的关键词筛选显示数据集
+    search(){
+      console.log("执行搜索"+this.scenario+"=="+this.dataKind+"=="+this.searchName)
+      this.init()
+    }
 
   }
 }
@@ -121,5 +171,18 @@ export default {
     
   }
 
-  
+  .searchP{
+    font-size: 20px;
+    font-weight: 400;
+  }
+
+  .seachRadio{
+    margin-top: 10px;
+    margin-left: 30px;
+  }
+
+  .searchInput{
+    width: 350px;
+    float: left;
+  }
 </style>

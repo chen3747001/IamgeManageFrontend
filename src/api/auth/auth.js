@@ -26,6 +26,17 @@ export function getUserInfo(){
     })
   }
 
+//通过用户名获取用户信息
+export function getUserInformation(userName){
+  return request({
+    url:'/user/information',
+    method:'get',
+    params:{
+      userName:userName,
+    }
+  })
+}
+
 //退出登录功能
 export function logout() {
     return request({

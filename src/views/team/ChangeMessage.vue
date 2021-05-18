@@ -19,9 +19,6 @@
                 </div>
                 <el-button type="primary" style="float:center;width:150px;margin-left:230px;margin-bottom:20px;"  @click="submit($event)">提交</el-button>
 
-                <!-- <figure class="image is-square">
-                    <img :src="PictureSrc">
-                </figure> -->
             </div>
 
             

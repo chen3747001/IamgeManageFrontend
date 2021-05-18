@@ -14,6 +14,7 @@
                     <p >收藏数</p>
                     <p>12</p>
                 </div>
+                
                 <div class="column is-1by2">
                     <p>团队</p>
                     <p>{{teamNumber}}</p>

@@ -3,7 +3,7 @@
         <div class="pageHeader">
             <div class="headerMain">
                 <div class="avatar">
-                    <el-avatar shape="square" :size="80" :src="url"></el-avatar>
+                    <el-avatar shape="square" :size="80" :src="AvatarSrc"></el-avatar>
                 </div>
 
                 <div>
@@ -14,7 +14,7 @@
                         
                     </div>
                     <div style="margin-left:30px">
-                        <h1 style="font-size:15px;margin-left:70px">创建来自 eafaefaef</h1>
+                        <h1 style="font-size:15px;margin-left:70px">简介：{{pictureSet.bio}}</h1>
                     </div>
                 </div>
             </div>
@@ -92,9 +92,71 @@
                     </div>
                 </div>
             </el-tab-pane>
+
+            <!-- 只有拥有权限才可以进行如下操作 -->
             <el-tab-pane label="活动" name="action">
             </el-tab-pane>
+            <!-- 这是修改信息页面 -->
             <el-tab-pane label="设置" name="setting">
+                <div class="changeavatar">
+                    <b-upload v-model="dropFile" drag-drop expanded>
+                        <section class="section">
+                            <div class="content has-text-centered">
+                                <p>修改头像，将文件拖拽至此处或者点击上传</p>
+                            </div>
+                        </section>
+                    </b-upload>
+
+                    <div class="tags">
+                        <span class="tag is-primary" v-if="dropFile!=null">
+                            {{dropFile.name}}
+                            <button class="delete is-small" type="button" @click="deleteDropFile()"></button>
+                        </span>
+                    </div>
+                    <el-button type="primary" style="float:center;width:150px;margin-left:230px;margin-bottom:20px;"  @click="submit($event)">提交</el-button>
+                </div>
+
+                <div class="introduction">
+                    <el-form
+                        ref="ruleForm"
+                        v-loading="loading"
+                        :model="ruleForm"
+                        :key="this.renderKey"
+                        status-icon
+                        label-width="100px"
+                        class="demo-ruleForm"
+                    >
+                        <el-form-item label="简介描述" prop="bio">
+                            <el-input type="textarea" :autosize="{ minRows: 3, maxRows: 4}" v-model="ruleForm.bio"></el-input>
+                        </el-form-item>
+
+                        <el-form-item label="应用场景">
+                            <el-radio-group v-model="ruleForm.scenario">
+                                <el-radio label="family" value="family">家用</el-radio>
+                                <el-radio label="science" value="science">科研用</el-radio>
+                                <el-radio label="mixed" value="mixed">混合的</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+
+                        <el-form-item label="图片类型">
+                            <el-select v-model="ruleForm.dataKind" placeholder="图片类型">
+                                <el-option label="游戏" value="game"></el-option>
+                                <el-option label="人物" value="people"></el-option>
+                                <el-option label="景色" value="scene"></el-option>
+                                <el-option label="照片" value="photograph"></el-option>
+                                <el-option label="卡通" value="cartoon"></el-option>
+                                <el-option label="混合的" value="mixed"></el-option>
+                            </el-select>
+                        </el-form-item>
+
+                        <el-form-item>
+                            <el-button
+                                type="primary"
+                                @click="submitForm('ruleForm')"
+                            >提交修改</el-button>
+                        </el-form-item>
+                    </el-form>
+                </div>
             </el-tab-pane>
          </el-tabs>
         </div>
@@ -103,7 +165,8 @@
 
 <script>
     import {getPictureInformation,showPicture} from "@/api/picture"
-    import {getSetInformationByName,downloadSet} from "@/api/pictureSet"
+    import {getSetInformationByName,downloadSet,updateSetInformation} from "@/api/pictureSet"
+    import {updateAvatar,showAvatar} from "@/api/picture"
     import axios from 'axios'
     
     export default {
@@ -117,6 +180,9 @@
                 //图片显示
                 PictureData:{},
                 PictureSrc:null,
+                //头像显示
+                AvatarData:{},
+                AvatarSrc:null,
                 
                 //该图片数据集的信息
                 pictureSet:{
@@ -131,9 +197,22 @@
                     // useRange:"",
                     // browse:""
                 },
+                //修改数据集信息
+                ruleForm:{
+                    bio:"",
+                    scenario:"",
+                    dataKind:"",
+            }   ,
+                loading: false,
+
+                //刷新数据用
+                renderKey: 0,
                 pictureSizeLevel:"KB",
                 pictureSize:0.0,
                 search: '',
+
+                //修改头像
+                dropFile:null,
 
             }
         },
@@ -141,6 +220,15 @@
             this.getInformationByName();
             this.getPicInformation();
         },
+        watch: {
+        item: {
+            // immediate: true,
+            handler (val) {
+                this.renderKey;
+            },
+            deep: true
+        }
+    },
         methods:{
             //选择对应的标签页
             selectTab(tab, event) {
@@ -156,7 +244,18 @@
                     console.log(this.SetName+" 的数据集信息是：")
                     this.pictureSet=data
                     this.calculatePictureSizeLevel()
-                    console.log("this.pictureSet is: "+this.pictureSet.name+this.pictureSet.owner)
+                    console.log("this.pictureSet is: "+this.pictureSet.name+this.pictureSet.owner+this.pictureSet.ownerAvatar)
+
+                    //初始提交的信息
+                    this.ruleForm.bio=this.pictureSet.bio
+                    this.ruleForm.scenario=this.pictureSet.scenario
+                    this.ruleForm.dataKind=this.pictureSize.dataKind
+
+                    //更新数据集头像的显示
+                    this.loadAvatar()
+
+                    //修改监听的数据
+                    this.renderKey+=1;
                 })
                 
                 
@@ -185,6 +284,19 @@
                     this.tableData=data
                     console.log("执行了一次查找所有图片操作")
                     console.log(this.tableData)
+                })
+            },
+
+            //显示图片数据集的封面
+            loadAvatar(){
+                showAvatar(this.pictureSet.avatar).then((res)=>{
+                    const{data}=res
+                    this.AvatarData=data
+
+                    console.log("=  =   set name is :"+this.pictureSet.name+" , picture name is: "+this.AvatarData.picture_name+", its detail data is:")
+                    console.log(data)
+
+                    this.AvatarSrc='data:image/'+this.AvatarData.picture_kind+';base64,'+this.AvatarData.picture_detail
                 })
             },
 
@@ -237,9 +349,62 @@
                     this.pictureSize=parseFloat(size/(1024*1024*1024)).toFixed(2);
                     this.pictureSizeLevel="GB"
                 }
-            }
+            },
 
-            
+            //删除选中的头像图片
+            deleteDropFile(index) {
+                this.dropFile=null;
+            },
+
+            //提交修改的头像信息
+            submit: function (event) {
+                //阻止元素发生默认的行为
+                console.log("这是上交数据环节");
+                console.log(this.dropFile)
+                console.log("此时form内的数据")
+                // 向formdata中添加需要传输的数据
+                let formData = new FormData();
+                formData.append("files",this.dropFile)
+                formData.append("name", this.pictureSet.name);
+                formData.append("kind","set")
+                formData.append("oldAvatar",this.pictureSet.avatar)
+
+                updateAvatar(formData).then((response)=>{
+                    const{code,message} =response
+                    this.message=message;
+                    console.log(message)
+                    this.$message({
+                    message: '修改头像成功',
+                    type: 'success'
+                    })
+                })
+            },
+
+            //提交修改的数据集的信息
+            submitForm(formName) {
+                this.loading = true
+                console.log("修改数据集信息"+this.ruleForm.bio+this.ruleForm.scenario+this.ruleForm.dataKind)
+                updateSetInformation(this.SetName,this.ruleForm.bio,this.ruleForm.scenario,this.ruleForm.dataKind)
+                    .then((value) => {
+                    const { code, message } = value
+                    this.loading = false
+
+                    //修改监听的数据
+                    this.renderKey+=1;
+
+
+                    if (code === 200) {
+                        this.$message({
+                            message: '修改数据集信息成功',
+                            type: 'success'
+                        })
+                    } 
+                    else {
+                        this.$message.error("修改团队信息失败，"+message)
+                    }
+                    })
+                    
+            },
             
         }
     
@@ -292,5 +457,13 @@
         margin-left: 20px;
         font-size: 16px;
         font-weight: 400;
+    }
+
+    .introduction{
+        width: 60%;
+    }
+
+    .changeavatar{
+        width: 60%;
     }
 </style> 

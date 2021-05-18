@@ -45,8 +45,7 @@
             <b-button
               type="is-link"
               style="float:right"
-              tag="router-link"
-              :to="{ path: '/pictureSet/create' }"
+              @click="createSet"
             >
               创建新的数据集
             </b-button>
@@ -85,6 +84,7 @@
 
 <script>
 // @ is an alias to /src
+import { mapGetters } from 'vuex'
 import {getBillboard} from "@/api/billboard"
 import NavigationBar from "@/components/layout/NavigationBar"
 import {showPublicPictureSetTest} from "@/api/pictureSet"
@@ -115,6 +115,9 @@ export default {
   created(){
     this.init()
   },
+  computed: {
+        ...mapGetters(['token', 'user'])
+    },
 
   methods:{
     async fetchBillboard(){
@@ -150,6 +153,12 @@ export default {
 
       // console.log("选择的类别是："+tab.name);
     },
+
+    //跳转到新建数据集页面
+        createSet(){
+            console.log("修改团队信息")
+            this.$router.push({name:"createPictureSet",params:{ownerName:this.user.username}})
+        },
   }
 }
 </script>

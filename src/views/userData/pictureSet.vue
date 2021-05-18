@@ -48,8 +48,7 @@
             <b-button
               type="is-link"
               style="float:right"
-              tag="router-link"
-              :to="{ path: '/pictureSet/create' }"
+              @click="createSet"
             >
               创建新的数据集
             </b-button>
@@ -87,6 +86,7 @@
 
 <script>
 // @ is an alias to /src
+import { mapGetters } from 'vuex'
 import NavigationBar from "@/components/layout/NavigationBar"
 import {showMyPictureSet,showMyPictureSetTest} from "@/api/pictureSet"
 import Pagination from '@/components/Pagination'
@@ -118,6 +118,9 @@ export default {
     // this.fetchSet()
     this.init()
   },
+  computed: {
+    ...mapGetters(['token', 'user'])
+    },
 
   methods:{
 
@@ -131,7 +134,7 @@ export default {
     //   //   })
     //   },
     init() {
-      showMyPictureSetTest(this.page.current, this.page.size,this.page.tab,this.scenario,this.dataKind,this.searchName).then((response) => {
+      showMyPictureSetTest(this.user.username,this.page.current, this.page.size,this.page.tab,this.scenario,this.dataKind,this.searchName).then((response) => {
         const { data } = response
         this.page.current = data.current
         this.page.total = data.total
@@ -155,7 +158,13 @@ export default {
     search(){
       console.log("执行搜索"+this.scenario+"=="+this.dataKind+"=="+this.searchName)
       this.init()
-    }
+    },
+
+    //跳转到新建数据集页面
+        createSet(){
+            console.log("修改团队信息")
+            this.$router.push({name:"createPictureSet",params:{ownerName:this.user.username}})
+        },
 
   }
 }

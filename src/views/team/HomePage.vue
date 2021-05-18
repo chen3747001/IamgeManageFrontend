@@ -35,10 +35,69 @@
         </div>
 
         <div class="column is-9">
-            <el-tabs v-model="tabName" @tab-click="selectTab">
+            <el-tabs v-model="tabKindName" @tab-click="selectTab">
+                <!-- 显示数据集数据 -->
                 <el-tab-pane label="数据集" name="set" >
-                    asdasdsa
+                    <div class="cards-header">
+                        <div class="searchInput">
+                        <div style="float:left;width:250px;">
+                            <p class="control has-icons-left" >
+                            <input class="input is-link" type="text" v-model="searchName" placeholder="输入数据集名称">
+                            <span class="icon is-left">
+                                <i class="el-icon-s-check"></i>
+                            </span>
+                            </p>
+                        </div>
+                        <div style="float:left;width:100px;">
+                            <p class="control" >
+                            <b-button
+                                type="is-link"
+                                @click="search()"
+                            >搜索
+                            </b-button>
+                            </p>
+                        </div>
+                        </div>
+
+                        <b-button
+                            type="is-link"
+                            style="float:right"
+                            @click="createSet"
+                        >
+                        创建新的数据集
+                        </b-button>
+                    </div>
+
+                    <!-- 展示我的set -->
+                    <div class="cards-main">
+                        <el-tabs v-model="tabName" @tab-click="selectSetTab">
+                            <el-tab-pane label="热度" name="hot">
+                                <div v-for="(item, index) in mySet" :key="index">
+                                    <card :item="item"></card>
+                                </div>
+                            </el-tab-pane>
+                            <el-tab-pane label="时间" name="time">
+                                <div v-for="(item, index) in mySet" :key="index">
+                                    <card :item="item"></card>
+                                </div>
+                            </el-tab-pane>
+                        </el-tabs>
+                    
+                
+                    <!--分页-->
+                    <!-- <p>分页</p> -->
+                    <pagination
+                        v-show="setPage.total > 0"
+                        :total="setPage.total"
+                        :page.sync="setPage.current"
+                        :limit.sync="setPage.size"
+                        @pagination="init"
+                    />
+                    </div>
+                
+
                 </el-tab-pane>
+                
                 <el-tab-pane label="成员" name="teamMember">
                     <div style="width:100%;height:50px;">
                         <el-button type="primary" style="width:150px;float:right" @click="toManageMemberPage">管理成员</el-button>
@@ -72,14 +131,16 @@ import {showAvatar} from "@/api/picture"
 import {getTeamByTeamName} from "@/api/team"
 import {getMemberByTeamName} from "@/api/teamMember"
 import memberCard from "@/components/MemberCard.vue"
+import Card from "@/components/Card.vue"
+import {showMyPictureSet,showMyPictureSetTest} from "@/api/pictureSet"
 
 export default {
     name:"teamHomePage",
-    components:{Pagination,memberCard},
+    components:{Pagination,memberCard,Card},
     data(){
         return{
             teamName:this.$route.params.teamName,
-            tabName:"set",
+            tabKindName:"set",
             teamData:"",
             teamMemberData:[],
             PictureSrc:require('@/assets/logo.png'),
@@ -89,11 +150,27 @@ export default {
                 size: 3,
                 total: 0,
             },
+
+            mySet:{},
+            testurl:"",
+            tabName: 'hot',
+            setPage: {
+                current: 1,
+                size: 3,
+                total: 0,
+                tab: 'hot'
+            },
+
+            // 数据集显示的选择条件
+            scenario:"",
+            dataKind:"",
+            searchName:"",
         }
     },
     created(){
         this.getTeamByTeamName()
         this.getTeamMember()
+        this.init()
     },
     computed: {
         ...mapGetters(['token', 'user'])
@@ -101,6 +178,10 @@ export default {
     methods:{
         //选择对应的标签页
         selectTab(tab, event) {
+            console.log("选择的类别是："+tab.name);
+            },
+        //选择对应的标签页
+        selectSetTab(tab, event) {
             console.log("选择的类别是："+tab.name);
             },
         
@@ -137,6 +218,12 @@ export default {
             this.$router.push({name:"teamChangeMessage",params:{teamName:this.teamName}})
         },
 
+        //跳转到新建数据集页面
+        createSet(){
+            console.log("修改团队信息")
+            this.$router.push({name:"createPictureSet",params:{ownerName:this.teamName}})
+        },
+
         //跳转到管理成员页面
         toManageMemberPage(){
             console.log("跳转到管理成员页面")
@@ -155,6 +242,27 @@ export default {
                 this.PictureSrc='data:image/'+this.AvatarData.picture_kind+';base64,'+this.AvatarData.picture_detail
             })
         },
+
+        //显示数据集
+        init() {
+            showMyPictureSetTest(this.teamName,this.setPage.current, this.setPage.size,this.setPage.tab,this.scenario,this.dataKind,this.searchName).then((response) => {
+                const { data } = response
+                this.setPage.current = data.current
+                this.setPage.total = data.total
+                this.setPage.size = data.size
+                this.mySet = data.records
+
+                console.log("显示团队的数据集信息")
+                console.log(this.mySet)
+                // console.log(this.mySet)
+            })
+        },
+
+        //根据输入的关键词筛选显示数据集
+        search(){
+            console.log("执行搜索"+this.scenario+"=="+this.dataKind+"=="+this.searchName)
+            this.init()
+        }
     }
 }
 </script>
@@ -193,5 +301,14 @@ export default {
     .avatarPic{
         margin-top: 70px;
         margin-left: 50px;
+    }
+
+    .cards-header{
+      width: 100%;
+      height: 40px;
+    }
+
+    .cards-main{
+        width: 100%;
     }
 </style>

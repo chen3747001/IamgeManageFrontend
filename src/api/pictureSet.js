@@ -20,11 +20,11 @@ export function showMyPictureSet(username){
 
 //显示属于我的数据集
 //展示列表 pageNo 页号 size 尺寸 tab 显示那种主题
-export function showMyPictureSetTest(pageNo,size,tab,scenario,dataKind,searchName){
+export function showMyPictureSetTest(user,pageNo,size,tab,scenario,dataKind,searchName){
     return request({
         url:'pictureSet/mySetTest',
         method:"get",
-        params:{pageNo:pageNo,size:size,tab:tab,scenario:scenario,dataKind:dataKind,searchName:searchName}
+        params:{user:user,pageNo:pageNo,size:size,tab:tab,scenario:scenario,dataKind:dataKind,searchName:searchName}
     })
 }
 

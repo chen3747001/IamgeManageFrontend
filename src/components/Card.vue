@@ -34,6 +34,7 @@
 <script>
 import {showAvatar} from "@/api/picture"
 import {getUserInformation} from "@/api/auth/auth"
+import {getTeamByTeamName} from "@/api/team"
 export default {
   name: "Card",
   props:{
@@ -81,10 +82,21 @@ export default {
             const{code,data,message}=res
             this.ownerData=data
 
-            console.log("owner name is : "+this.ownerData.username+" its avatar is : "+this.ownerData.avatar)
-            console.log(this.ownerData)
-            this.loadOwnerAvatar()
+            // console.log("owner name is : "+this.ownerData.username+" its avatar is : "+this.ownerData.avatar)
+            // console.log(this.ownerData)
+            if(this.ownerData!=null){
+                this.loadOwnerAvatar()
+            }
+            else{
+                getTeamByTeamName(this.item.owner).then((res)=>{
+                const{data}=res
+                this.ownerData=data
+                console.log(this.ownerData)
+                this.loadOwnerAvatar()
+            })
+            }
         })
+
     },
 
     //显示图片数据集拥有者的头像

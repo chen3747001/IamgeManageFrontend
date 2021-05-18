@@ -59,8 +59,10 @@ export default {
     name:"CreatePictureSet",
     data(){
         return{
+            ownerName:this.$route.params.ownerName,
             loading:false,
             ruleForm:{
+                ownerName:"",
                 name:"",
                 action:"",
                 useRange:""
@@ -75,6 +77,7 @@ export default {
             this.$router.push({path:`/`})
         },
         create(fromName){
+          this.ruleForm.ownerName=this.ownerName
             console.log("name is "+this.ruleForm.name+" action is"+this.ruleForm.action+" range is "+this.ruleForm.useRange)
             createPictureSet(this.ruleForm).then((value) => {
               const { code, message } = value

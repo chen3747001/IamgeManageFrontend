@@ -115,9 +115,9 @@
           <hr class="dropdown-divider">
           <b-navbar-item
             tag="router-link"
-            :to="{ path: `/member/${user.username}/setting` }"
+            :to="{ path: '/informList' }"
           >
-            ⚙ 设置中心
+            ⚙ 通知中心
           </b-navbar-item>
           <hr class="dropdown-divider">
           <b-navbar-item

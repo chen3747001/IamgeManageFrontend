@@ -100,6 +100,13 @@ const routes = [
     component:()=>import('@/views/team/MemberManage'),
     meta:{title:"管理成员页面"}
   },
+  //跳转到通知列表页面
+  {
+    name:"informList",
+    path:"/informList",
+    component:()=>import('@/views/inform/InformList'),
+    meta:{title:"通知信息页面"}
+  },
   //请求错误页面
   {
     path:'/error',

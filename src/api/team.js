@@ -46,3 +46,5 @@ export function updateTeamInformation(teamName,bio,email){
         params:{teamName:teamName,bio:bio,email:email}
     })
 }
+
+

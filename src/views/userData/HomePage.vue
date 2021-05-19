@@ -99,6 +99,7 @@ export default {
                 total: 0,
             },
             teamNumber:0,
+
         }
     },
     created(){
@@ -128,6 +129,7 @@ export default {
                 this.PictureSrc='data:image/'+this.AvatarData.picture_kind+';base64,'+this.AvatarData.picture_detail
             })
         },
+
 
         //选择对应的标签页
         selectTab(tab, event) {

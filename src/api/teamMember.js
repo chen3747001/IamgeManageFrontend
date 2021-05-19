@@ -26,3 +26,12 @@ export function updatePower(teamMember){
         data:teamMember
     })
 }
+
+//删除成员
+export function deleteMember(teamName,memberName){
+    return request({
+        url:"teamMember/deleteMember",
+        method:"post",
+        params:{teamName:teamName,memberName:memberName}
+    })
+}

@@ -55,7 +55,8 @@
                             </template>
                             <template slot-scope="scope">
                                 <!-- <el-button @click="handleClick(scope.row)" size="mini">查看</el-button> -->
-                                <el-button size="mini" type="danger" @click="changeMember(scope.row)">编辑</el-button>
+                                <el-button size="mini" type="primary" @click="changeMember(scope.row)">编辑</el-button>
+                                <el-button size="mini" type="primary" @click="deleteMember(scope.row)">删除</el-button>
 
                                 <!-- 修改信息的页面 -->
                                 <el-dialog title="修改信息" :visible.sync="dialogFormVisible" width="30%" show-close>
@@ -116,7 +117,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import {getMemberByTeamNameList,updatePower} from "@/api/teamMember"
+import {getMemberByTeamNameList,updatePower,deleteMember} from "@/api/teamMember"
 export default {
     name:"memberManage",
     data(){
@@ -163,6 +164,7 @@ export default {
                 this.tableData = data
                 console.log(this.tableData[0].memberName+this.tableData[1].memberName)
 
+                //刷新显示的数据
                 this.renderKey+=1;
                 // console.log(this.mySet)
             })
@@ -173,6 +175,42 @@ export default {
             console.log("编辑"+row.memberName+row.ableDelete)
             this.dialogFormVisible=true
             this.updateForm.memberName=row.memberName
+        },
+
+        //删除成员
+        deleteMember(row){
+            console.log("删除成员"+row.memberName)
+            this.$confirm('此操作将删除成员, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+                })
+                .then(() => {
+                    deleteMember(this.teamName,row.memberName).then((res)=>{
+                        const{code,message}=res
+                        if(code===200){
+                            this.$message({
+                                type: 'success',
+                                message: '删除成功!'
+                            });
+                            this.tableData.splice(this.tableData.indexOf(row),1)
+                            this.renderKey+=1
+                        }
+                        else{
+                            this.$message({
+                                type: 'info',
+                                message: '删除失败!'+message
+                            });
+                        }
+                    })
+                    
+                })
+                .catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                });          
+            });
         },
 
         //提交修改的用户权力

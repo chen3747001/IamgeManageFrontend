@@ -137,8 +137,6 @@ export default {
 
     .card:hover{
         box-shadow: 5px 5px 5px 20px rgba(175, 174, 240, 0.2); 
-            /* 盒子向上移动效果，改变上外边距 */
-        
     }
 
     /* 添加了移动到该card后，图片放大效果 */

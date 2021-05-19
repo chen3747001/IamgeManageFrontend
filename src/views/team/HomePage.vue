@@ -12,7 +12,7 @@
             <div  class="columns" style="text-align:center"> 
                 <div class="column is-1by2">
                     <p >数据集数量</p>
-                    <p>{{teamData.setCount}}</p>
+                    <p>{{this.setPage.total}}</p>
                 </div>
                 <div class="column is-1by2">
                     <p>成员数量</p>
@@ -100,6 +100,7 @@
                 
                 <el-tab-pane label="成员" name="teamMember">
                     <div style="width:100%;height:50px;">
+                        <el-button type="primary" style="width:150px;float:left" @click="addMember">添加成员</el-button>
                         <el-button type="primary" style="width:150px;float:right" @click="toManageMemberPage">管理成员</el-button>
                     </div>
                     <div style="width:100%">
@@ -133,6 +134,7 @@ import {getMemberByTeamName} from "@/api/teamMember"
 import memberCard from "@/components/MemberCard.vue"
 import Card from "@/components/Card.vue"
 import {showMyPictureSet,showMyPictureSetTest} from "@/api/pictureSet"
+import {inviteJoin} from "@/api/action"
 
 export default {
     name:"teamHomePage",
@@ -262,7 +264,37 @@ export default {
         search(){
             console.log("执行搜索"+this.scenario+"=="+this.dataKind+"=="+this.searchName)
             this.init()
-        }
+        },
+
+        //添加成员
+        addMember(){
+            this.$prompt('请输入用户名', '添加用户', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                }).then(({ value }) => {
+                    inviteJoin(this.user.username,value,this.teamName).then((res)=>{
+                        const{code,message}=res
+                        if(code===200){
+                            this.$message({
+                                type: 'success',
+                                message: '邀请成功: ' + value
+                            });
+                        }
+                        else{
+                            this.$message({
+                                type: 'error',
+                                message: '邀请失败，原因是： ' + message
+                            });
+                        }
+                    })
+                    
+                }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '取消输入'
+                });       
+                });
+        },
     }
 }
 </script>

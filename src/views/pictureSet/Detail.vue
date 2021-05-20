@@ -9,8 +9,12 @@
                 <div>
                     <div class="headIntroduction">
                         <h1 style="float:left;font-weight:bold;font-size:26px;margin-left:20px">{{SetName}}</h1>
-                        <el-tag style="float:left;margin-left: 10px;margin-top:5px">私有</el-tag>
-                        <el-tag type="success" style="float:left;margin-left: 10px;;margin-top:5px">拥有者</el-tag>
+                        <el-tag style="float:left;margin-left: 10px;margin-top:5px">{{pictureSet.useRange}}</el-tag>
+
+                        <el-tooltip class="item" effect="dark" placement="top">
+                            <div slot="content">{{introductionRight}}</div>
+                            <el-button size="small" type="success" style="float:left;margin-left: 10px;;margin-top:5px">{{userRight.role}}</el-button>
+                        </el-tooltip>
                         
                     </div>
                     <div style="margin-left:30px">
@@ -39,8 +43,9 @@
                         更多操作<i class="el-icon-arrow-down el-icon--right"></i>
                     </el-button>
                     <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item command="manage">管理数据</el-dropdown-item>
+                        <el-dropdown-item command="manage" v-if="showManageDataButton==true">管理数据</el-dropdown-item>
                         <el-dropdown-item command="download">下载数据</el-dropdown-item>
+                        <el-dropdown-item command="delete" v-if="userRight.ableDeleteSet==1">删除数据集</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
                 <!-- 设置跳转的路径 -->
@@ -112,65 +117,72 @@
             <el-tab-pane label="活动" name="action">
             </el-tab-pane>
             <!-- 这是修改信息页面 -->
-            <el-tab-pane label="设置" name="setting">
-                <div class="changeavatar">
-                    <b-upload v-model="dropFile" drag-drop expanded>
-                        <section class="section">
-                            <div class="content has-text-centered">
-                                <p>修改头像，将文件拖拽至此处或者点击上传</p>
-                            </div>
-                        </section>
-                    </b-upload>
-
-                    <div class="tags">
-                        <span class="tag is-primary" v-if="dropFile!=null">
-                            {{dropFile.name}}
-                            <button class="delete is-small" type="button" @click="deleteDropFile()"></button>
-                        </span>
-                    </div>
-                    <el-button type="primary" style="float:center;width:150px;margin-left:230px;margin-bottom:20px;"  @click="submit($event)">提交</el-button>
+            <el-tab-pane label="设置" name="setting" >
+                <div v-if="userRight.ableChange==0">
+                    <h1>没有权限进行操作</h1>
                 </div>
 
-                <div class="introduction">
-                    <el-form
-                        ref="ruleForm"
-                        v-loading="loading"
-                        :model="ruleForm"
-                        :key="this.renderKey"
-                        status-icon
-                        label-width="100px"
-                        class="demo-ruleForm"
-                    >
-                        <el-form-item label="简介描述" prop="bio">
-                            <el-input type="textarea" :autosize="{ minRows: 3, maxRows: 4}" v-model="ruleForm.bio"></el-input>
-                        </el-form-item>
 
-                        <el-form-item label="应用场景">
-                            <el-radio-group v-model="ruleForm.scenario">
-                                <el-radio label="family" value="family">家用</el-radio>
-                                <el-radio label="science" value="science">科研用</el-radio>
-                                <el-radio label="mixed" value="mixed">混合的</el-radio>
-                            </el-radio-group>
-                        </el-form-item>
+                <div v-else-if="userRight.ableChange==1">
+                    <div class="changeavatar" >
+                        <b-upload v-model="dropFile" drag-drop expanded>
+                            <section class="section">
+                                <div class="content has-text-centered">
+                                    <p>修改头像，将文件拖拽至此处或者点击上传</p>
+                                </div>
+                            </section>
+                        </b-upload>
 
-                        <el-form-item label="图片类型">
-                            <el-select v-model="ruleForm.dataKind" placeholder="图片类型">
-                                <el-option label="游戏" value="game"></el-option>
-                                <el-option label="人物" value="people"></el-option>
-                                <el-option label="景色" value="scene"></el-option>
-                                <el-option label="照片" value="photograph"></el-option>
-                                <el-option label="卡通" value="cartoon"></el-option>
-                                <el-option label="混合的" value="mixed"></el-option>
-                            </el-select>
-                        </el-form-item>
+                        <div class="tags">
+                            <span class="tag is-primary" v-if="dropFile!=null">
+                                {{dropFile.name}}
+                                <button class="delete is-small" type="button" @click="deleteDropFile()"></button>
+                            </span>
+                        </div>
+                        <el-button type="primary" style="float:center;width:150px;margin-left:230px;margin-bottom:20px;"  @click="submit($event)">提交</el-button>
+                    </div>
 
-                        <el-form-item>
-                            <el-button
-                                type="primary"
-                                @click="submitForm('ruleForm')"
-                            >提交修改</el-button>
-                        </el-form-item>
-                    </el-form>
+                    <div class="introduction">
+                        <el-form
+                            ref="ruleForm"
+                            v-loading="loading"
+                            :model="ruleForm"
+                            :key="this.renderKey"
+                            status-icon
+                            label-width="100px"
+                            class="demo-ruleForm"
+                        >
+                            <el-form-item label="简介描述" prop="bio">
+                                <el-input type="textarea" :autosize="{ minRows: 3, maxRows: 4}" v-model="ruleForm.bio"></el-input>
+                            </el-form-item>
+
+                            <el-form-item label="应用场景">
+                                <el-radio-group v-model="ruleForm.scenario">
+                                    <el-radio label="family" value="family">家用</el-radio>
+                                    <el-radio label="science" value="science">科研用</el-radio>
+                                    <el-radio label="mixed" value="mixed">混合的</el-radio>
+                                </el-radio-group>
+                            </el-form-item>
+
+                            <el-form-item label="图片类型">
+                                <el-select v-model="ruleForm.dataKind" placeholder="图片类型">
+                                    <el-option label="游戏" value="game"></el-option>
+                                    <el-option label="人物" value="people"></el-option>
+                                    <el-option label="景色" value="scene"></el-option>
+                                    <el-option label="照片" value="photograph"></el-option>
+                                    <el-option label="卡通" value="cartoon"></el-option>
+                                    <el-option label="混合的" value="mixed"></el-option>
+                                </el-select>
+                            </el-form-item>
+
+                            <el-form-item>
+                                <el-button
+                                    type="primary"
+                                    @click="submitForm('ruleForm')"
+                                >提交修改</el-button>
+                            </el-form-item>
+                        </el-form>
+                    </div>
                 </div>
             </el-tab-pane>
          </el-tabs>
@@ -181,6 +193,7 @@
 <script>
     import { mapGetters } from 'vuex'
     import {getPictureInformation,showPicture} from "@/api/picture"
+    import {getRightSet} from "@/api/right"
     import {getSetInformationByName,downloadSet,updateSetInformation} from "@/api/pictureSet"
     import {updateAvatar,showAvatar} from "@/api/picture"
     import {isExisted,createCollect,deleteCollect} from "@/api/collect"
@@ -236,6 +249,21 @@
                 isCollect:false,
                 renderCollectKey:0,
 
+                //用户权限相关
+                introductionRight:"",
+
+                userRight:{
+                    ownerKind:"",
+                    role:"",
+                    ableAdd:0,
+                    ableDelete:0,
+                    ableCreateSet:0,
+                    ableDeleteSet:0,
+                    ableChange:0,
+                },
+                //是否展示管理数据的按钮
+                showManageDataButton:false,
+
             }
         },
         created(){
@@ -284,6 +312,9 @@
                     this.calculatePictureSizeLevel()
                     console.log("this.pictureSet is: "+this.pictureSet.name+this.pictureSet.owner+this.pictureSet.ownerAvatar)
 
+                    //获得用户在该数据集内的权限
+                    this.getUserRight()
+
                     //初始提交的信息
                     this.ruleForm.bio=this.pictureSet.bio
                     this.ruleForm.scenario=this.pictureSet.scenario
@@ -299,6 +330,24 @@
                 
                 console.log(this.getData)
                 // console.log(this.PictureSet.name+" == "+this.PictureSet.owner)
+            },
+
+            //获得该用户在该数据集内的权限
+            getUserRight(){
+                getRightSet(this.pictureSet.name,this.pictureSet.owner)
+                .then((res)=>{
+                    const{data}=res
+                    this.userRight=data
+
+                    // this.$set(this.userRight, 'ableChange',data.ableChange)
+                    if(this.userRight.ableAdd==1 || this.userRight.ableDelete==1){
+                        this.showManageDataButton=true
+                    }
+                    this.introductionRight="你的权限是： 添加数据："+this.userRight.ableAdd+" |删除数据： "+this.userRight.ableDelete
+                        +" |删除数据集： "+this.userRight.ableDeleteSet+" |编辑设置： "+this.userRight.ableChange
+                    console.log("用户的权限是："+this.showManageDataButton)
+                    console.log(this.userRight)
+                })
             },
 
             //更换显示的图片
@@ -346,6 +395,9 @@
                 }
                 else if(command=="download"){
                     this.downLoadSet()
+                }
+                else if(command=="delete"){
+                    console.log("想要删除数据集")
                 }
             },
 

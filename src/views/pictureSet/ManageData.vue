@@ -3,7 +3,7 @@
         <!-- <h1>{{SetName}}</h1> -->
         <div class="pageHeader">
             <router-link :to="{name:'UploadData',params:{SetName:SetName}}" >
-                <el-button type="primary" style="float:right;width:150px">上传数据</el-button>
+                <el-button type="primary" style="float:right;width:150px" v-if="userRight.ableAdd==1">上传数据</el-button>
             </router-link>
         </div>
 
@@ -53,11 +53,11 @@
                             <template slot-scope="scope">
                                 <!-- <el-button @click="handleClick(scope.row)" size="mini">查看</el-button> -->
                                 <el-button @click="loadPicture(scope.row)" size="mini">查看</el-button>
-                                <el-button size="mini" type="danger" @click="deletePicture(scope.row)">删除</el-button>
+                                <el-button size="mini" type="danger" @click="deletePicture(scope.row)" v-if="userRight.ableDelete==1">删除</el-button>
                             </template>
                     </el-table-column>
                 </el-table>
-                <div style="margin-top: 20px">
+                <div style="margin-top: 20px" v-if="userRight.ableDelete==1">
                     <el-button @click="toggleSelection()">取消选择</el-button>
                     <el-button @click="deleteSelection()">批量删除</el-button>
                 </div>
@@ -68,6 +68,8 @@
 
 <script>
   import {getPictureInformation,showPicture,deletePictureList} from "@/api/picture"
+  import {getSetInformationByName} from "@/api/pictureSet"
+  import {getRightSet} from "@/api/right"
   export default {
     name: 'ManageData',
     watch: {
@@ -106,12 +108,27 @@
           setName: "",
           pictureList:[],
           size:[],
-        }
+        },
+
+        //该图片数据集的信息
+        pictureSet:{},
+
+        //用户权限相关
+        userRight:{
+          ownerKind:"",
+          role:"",
+          ableAdd:0,
+          ableDelete:0,
+          ableCreateSet:0,
+          ableDeleteSet:0,
+          ableChange:0,
+        },
       }
     },
 
     created(){
         this.getPicInformation();
+        this.getInformationByName();
     },
 
     methods: {
@@ -124,6 +141,33 @@
                 console.log(this.tableData)
             })
         },
+
+        //获得该图片数据集的信息
+            getInformationByName(){
+                getSetInformationByName(this.SetName).then((res)=>{
+                    const{ data }=res
+                    // this.PictureSet=data
+                    console.log(this.SetName+" 的数据集信息是：")
+                    this.pictureSet=data
+                    console.log("this.pictureSet is: "+this.pictureSet.name+this.pictureSet.owner+this.pictureSet.ownerAvatar)
+
+                    //获得用户在该数据集内的权限
+                    this.getUserRight()
+                })
+
+            },
+
+        //获得该用户在该数据集内的权限
+            getUserRight(){
+                getRightSet(this.pictureSet.name,this.pictureSet.owner)
+                .then((res)=>{
+                    const{data}=res
+                    this.userRight=data
+                    
+                    console.log("用户的权限是：")
+                    console.log(this.userRight)
+                })
+            },
 
         //显示图片
         loadPicture(row){

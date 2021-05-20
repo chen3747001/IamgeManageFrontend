@@ -21,7 +21,7 @@
             </div>
 
             <div class="introduction">
-                <el-button type="primary" style="display:block;margin:0 auto;width:200px" @click="changeTeamInformation">修改信息</el-button>
+                <el-button type="primary" style="display:block;margin:0 auto;width:200px" @click="changeTeamInformation" v-if="userRight.ableChange==1">修改信息</el-button>
                 <p class="introductionItem">简介描述</p>
                 <p class="introductionValue" v-if="user.bio==null">暂无</p>
                 <p class="introductionValue" v-else>{{teamData.bio}}</p>
@@ -63,6 +63,7 @@
                             type="is-link"
                             style="float:right"
                             @click="createSet"
+                            v-if="userRight.ableCreateSet==1"
                         >
                         创建新的数据集
                         </b-button>
@@ -99,7 +100,7 @@
                 </el-tab-pane>
                 
                 <el-tab-pane label="成员" name="teamMember">
-                    <div style="width:100%;height:50px;">
+                    <div style="width:100%;height:50px;" v-if="userRight.ableChange==1">
                         <el-button type="primary" style="width:150px;float:left" @click="addMember">添加成员</el-button>
                         <el-button type="primary" style="width:150px;float:right" @click="toManageMemberPage">管理成员</el-button>
                     </div>
@@ -134,6 +135,7 @@ import {getMemberByTeamName} from "@/api/teamMember"
 import memberCard from "@/components/MemberCard.vue"
 import Card from "@/components/Card.vue"
 import {showMyPictureSet,showMyPictureSetTest} from "@/api/pictureSet"
+import {getRightInTeam} from "@/api/right"
 import {inviteJoin} from "@/api/action"
 
 export default {
@@ -167,12 +169,24 @@ export default {
             scenario:"",
             dataKind:"",
             searchName:"",
+
+            //用户权限相关
+            userRight:{
+                ownerKind:"",
+                role:"",
+                ableAdd:0,
+                ableDelete:0,
+                ableCreateSet:0,
+                ableDeleteSet:0,
+                ableChange:0,
+            },
         }
     },
     created(){
         this.getTeamByTeamName()
         this.getTeamMember()
         this.init()
+        this.getUserRight()
     },
     computed: {
         ...mapGetters(['token', 'user'])
@@ -187,6 +201,18 @@ export default {
             console.log("选择的类别是："+tab.name);
             },
         
+        //获得该用户在该团队内的权限
+        getUserRight(){
+            getRightInTeam(this.teamName)
+            .then((res)=>{
+                const{data}=res
+                this.userRight=data
+                    
+                console.log("用户的权限是：")
+                console.log(this.userRight)
+            })
+            },
+
         //根据团队名获得团队信息
         getTeamByTeamName(){
             console.log("开始获得team信息")

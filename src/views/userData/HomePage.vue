@@ -12,7 +12,7 @@
             <div  class="columns" style="text-align:center"> 
                 <div class="column is-1by2">
                     <p >收藏数</p>
-                    <p>12</p>
+                    <p>{{collectPage.total}}</p>
                 </div>
                 
                 <div class="column is-1by2">
@@ -70,7 +70,34 @@
                     </div>
                 </el-tab-pane>
                 <el-tab-pane label="收藏" name="collect" >
-                    asdasdsa
+                    <el-row>
+                        <el-col :span="24">
+                            <div v-for="(item, index) in collectSet" :key="index" >
+                                <card :item="item"></card>
+                            </div>
+                        </el-col>
+                    </el-row>
+                        
+                    <el-row>
+                        <el-col :span="24">
+                            <p>分页</p>
+                            <!--分页-->
+                            <Pagination
+                                width
+                                v-show="collectPage.total > 0"
+                                :total="collectPage.total"
+                                :page.sync="collectPage.current"
+                                :limit.sync="collectPage.size"
+                                @pagination="showCollectSet"
+                            />
+                        </el-col>
+                    </el-row>
+                   
+                    
+                        
+                    
+
+                    
                 </el-tab-pane>
             </el-tabs>
         </div>
@@ -81,11 +108,13 @@
 import { mapGetters } from 'vuex'
 import {showAvatar} from "@/api/picture"
 import {getTeamByMemberName,getTeamByMemberNamePage} from "@/api/team"
+import {showCollectPage} from "@/api/collect"
 import teamCard from "@/components/TeamCard.vue"
 import Pagination from '@/components/Pagination'
+import Card from "@/components/Card.vue"
 export default {
     name:"useHomePage",
-    components:{teamCard,Pagination},
+    components:{teamCard,Pagination,Card},
     data(){
         return{
             // PictureSrc:null,
@@ -100,12 +129,19 @@ export default {
             },
             teamNumber:0,
 
+            //收藏的数据集显示
+            collectSet:"",
+            collectPage: {
+                current: 1,
+                size: 3,
+                total: 0,
+            },
         }
     },
     created(){
         this.loadAvatar()
         this.getTeamByMemberName()
-        
+        this.showCollectSet()
     },
 
     computed: {
@@ -154,6 +190,22 @@ export default {
                 this.teamNumber=data.total
                 
                 // console.log(this.mySet)
+            })
+        },
+
+        //显示用户收藏的数据集
+        showCollectSet(){
+            showCollectPage(this.user.username,this.collectPage.current,this.collectPage.size)
+            .then((res)=>{
+                const{data}=res
+
+                this.collectPage.current = data.current
+                this.collectPage.total = data.total
+                this.collectPage.size = data.size
+                this.collectSet = data.records
+                console.log("用户收藏信息是")
+                console.log(data.total)
+                console.log(this.collectSet)
             })
         },
         },

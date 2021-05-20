@@ -146,6 +146,8 @@ export default {
       })
     },
 
+    
+
     //根据类别显示数据集
     selectTab(tab, event) {
       this.page.tab=tab.name;

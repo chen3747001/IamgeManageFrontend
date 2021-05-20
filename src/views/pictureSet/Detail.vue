@@ -18,7 +18,22 @@
                     </div>
                 </div>
             </div>
-            <div style="float:right;margin-top:20px;width:200px">
+            <div style="float:right;margin-top:20px;width:200px" :key="this.renderCollectKey">
+                <!-- 显示收藏按钮 -->
+                <div style="float:left;width:40px;margin-bottom:10px">
+                    <div v-if="isCollect==false">
+                        <el-tooltip class="item" effect="dark" content="点击收藏该数据集" placement="top">
+                            <el-button type="danger" icon="el-icon-star-off" circle @click="collectSet"></el-button>
+                        </el-tooltip>
+                        
+                    </div>
+                    <div v-else-if="isCollect==true">
+                        <el-tooltip class="item" effect="dark" content="点击取消收藏该数据集" placement="top">
+                            <el-button type="success" icon="el-icon-star-off" circle @click="removeCollectSet"></el-button>
+                        </el-tooltip>
+                    </div>
+                </div>
+
                 <el-dropdown style="float:right;width:150px" @command="handleCommand">
                     <el-button type="primary">
                         更多操作<i class="el-icon-arrow-down el-icon--right"></i>
@@ -164,9 +179,12 @@
 </template>
 
 <script>
+    import { mapGetters } from 'vuex'
     import {getPictureInformation,showPicture} from "@/api/picture"
     import {getSetInformationByName,downloadSet,updateSetInformation} from "@/api/pictureSet"
     import {updateAvatar,showAvatar} from "@/api/picture"
+    import {isExisted,createCollect,deleteCollect} from "@/api/collect"
+
     import axios from 'axios'
     
     export default {
@@ -214,26 +232,46 @@
                 //修改头像
                 dropFile:null,
 
+                //收藏相关
+                isCollect:false,
+                renderCollectKey:0,
+
             }
         },
         created(){
             this.getInformationByName();
             this.getPicInformation();
+            this.isAlreadyCollect();
+        },
+        computed: {
+            ...mapGetters(['token', 'user'])
         },
         watch: {
         item: {
             // immediate: true,
             handler (val) {
                 this.renderKey;
+                this.renderCollectKey;
             },
             deep: true
         }
-    },
+        },
         methods:{
             //选择对应的标签页
             selectTab(tab, event) {
 
                 console.log("选择的类别是："+tab.name);
+            },
+
+            //查出该数据集是否被该用户收藏
+            isAlreadyCollect(){
+                isExisted(this.user.username,this.SetName).then((res)=>{
+                    const{data}=res
+                    if(data=="存在"){
+                        this.isCollect=true
+                    }
+                    console.log("iscollect is:"+this.isCollect)
+                })
             },
 
             //获得该图片数据集的信息
@@ -405,6 +443,26 @@
                     })
                     
             },
+
+            //点击收藏数据集
+            collectSet(){
+                createCollect(this.user.username,this.SetName)
+                .then((res)=>{
+                    // 修改是否收藏的数据，刷新key来刷新收藏按钮的显示
+                    this.isCollect=true
+                    this.renderCollectKey+=1
+                })
+            },
+
+            //取消收藏数据集
+            removeCollectSet(){
+                deleteCollect(this.user.username,this.SetName)
+                .then((res)=>{
+                    // 修改是否收藏的数据，刷新key来刷新收藏按钮的显示
+                    this.isCollect=false
+                    this.renderCollectKey+=1
+                })
+            }
             
         }
     

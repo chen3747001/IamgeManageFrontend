@@ -73,3 +73,14 @@ export function updateSetInformation(setName,bio,scenario,dataKind){
         }
     })
 }
+
+//添加浏览量
+export function addBrowseCount(setName){
+    return request({
+        url:"/pictureSet/addBrowse",
+        method:"post",
+        params:{
+            setName:setName,
+        }
+    })
+}

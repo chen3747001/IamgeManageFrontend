@@ -93,7 +93,7 @@
 
                     <!-- 展示数据集的基本信息 -->
                     <div class="column is-3">
-                        <ul>
+                        <ul :key="this.browseKey">
                             <li>拥有者：<br><span>{{pictureSet.owner}}</span></li>
                             <li>创建时间：<br><span> {{dayjs(pictureSet.createTime).format('YYYY/MM/DD HH:mm:ss')}}</span></li>
                             <li>最近一次修改时间：<br><span>{{dayjs(pictureSet.amendTime).format('YYYY/MM/DD HH:mm:ss')}}</span></li>
@@ -194,7 +194,7 @@
     import { mapGetters } from 'vuex'
     import {getPictureInformation,showPicture} from "@/api/picture"
     import {getRightSet} from "@/api/right"
-    import {getSetInformationByName,downloadSet,updateSetInformation} from "@/api/pictureSet"
+    import {getSetInformationByName,downloadSet,updateSetInformation,addBrowseCount} from "@/api/pictureSet"
     import {updateAvatar,showAvatar} from "@/api/picture"
     import {isExisted,createCollect,deleteCollect} from "@/api/collect"
 
@@ -206,7 +206,7 @@
             return{
                 url: require('@/assets/logo.png'),
                 SetName:this.$route.params.SetName,
-                tabName: 'hot',
+                tabName: 'outline',
                 tableData:[{name:'chen'},{name:'yu'},{name:'heng'}],
                 //图片显示
                 PictureData:{},
@@ -263,6 +263,8 @@
                 },
                 //是否展示管理数据的按钮
                 showManageDataButton:false,
+                //刷新浏览量的key
+                browseKey:0,
 
             }
         },
@@ -280,6 +282,7 @@
             handler (val) {
                 this.renderKey;
                 this.renderCollectKey;
+                this.browseKey;
             },
             deep: true
         }
@@ -345,8 +348,22 @@
                     }
                     this.introductionRight="你的权限是： 添加数据："+this.userRight.ableAdd+" |删除数据： "+this.userRight.ableDelete
                         +" |删除数据集： "+this.userRight.ableDeleteSet+" |编辑设置： "+this.userRight.ableChange
+                    //判断该用户是不是该数据集的拥有者，不是就添加一个浏览量
+                    if(this.userRight.role=="参观者"){
+                        this.addBrowse()
+                    }
                     console.log("用户的权限是："+this.showManageDataButton)
                     console.log(this.userRight)
+                })
+            },
+
+            //添加一点浏览量（如果该用户不是该数据集的拥有者）
+            addBrowse(){
+                addBrowseCount(this.SetName).then((res)=>{
+                    console.log(this.SetName+"的浏览量增加了")
+                    //刷新浏览量的显示
+                    this.pictureSet.browse+=1
+                    this.browseKey+=1
                 })
             },
 

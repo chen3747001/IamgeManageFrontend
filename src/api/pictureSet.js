@@ -84,3 +84,14 @@ export function addBrowseCount(setName){
         }
     })
 }
+
+//删除数据集
+export function deleteSet(setName){
+    return request({
+        url:"/pictureSet/deleteSet",
+        method:"post",
+        params:{
+            setName:setName,
+        }
+    })
+}

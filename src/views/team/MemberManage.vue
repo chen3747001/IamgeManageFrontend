@@ -56,7 +56,7 @@
                             <template slot-scope="scope">
                                 <!-- <el-button @click="handleClick(scope.row)" size="mini">查看</el-button> -->
                                 <el-button size="mini" type="primary" @click="changeMember(scope.row)">编辑</el-button>
-                                <el-button size="mini" type="primary" @click="deleteMember(scope.row)">删除</el-button>
+                                <el-button size="mini" type="danger" @click="deleteMember(scope.row)">删除</el-button>
 
                                 <!-- 修改信息的页面 -->
                                 <el-dialog title="修改信息" :visible.sync="dialogFormVisible" width="30%" show-close>

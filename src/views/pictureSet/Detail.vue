@@ -207,7 +207,7 @@
     import { mapGetters } from 'vuex'
     import {getPictureInformation,showPicture} from "@/api/picture"
     import {getRightSet} from "@/api/right"
-    import {getSetInformationByName,downloadSet,updateSetInformation,addBrowseCount} from "@/api/pictureSet"
+    import {getSetInformationByName,downloadSet,updateSetInformation,addBrowseCount,deleteSet} from "@/api/pictureSet"
     import {updateAvatar,showAvatar} from "@/api/picture"
     import {isExisted,createCollect,deleteCollect} from "@/api/collect"
     import {getOperations} from "@/api/setOperation"
@@ -459,6 +459,32 @@
                 }
                 else if(command=="delete"){
                     console.log("想要删除数据集")
+                    this.$confirm('此操作将删除数据集, 是否继续?', '确认', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'danger'
+                        })
+                        .then(() => {
+                            deleteSet(this.SetName).then((res)=>{
+                                const{code,message}=res
+                                if(code===200){
+                                    this.$message({
+                                        type: 'info',
+                                        message: '删除数据集成功'
+                                    });
+                                    console.log("删除成功，即将跳转页面")
+                                    this.$router.push({path: '/'});
+                                }
+                            })
+                        })
+                        .catch(() => {
+                            this.$message({
+                                type: 'info',
+                                message: '已取消删除'
+                            });          
+                    });
+
+                    
                 }
             },
 

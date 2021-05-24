@@ -115,6 +115,19 @@
 
             <!-- 只有拥有权限才可以进行如下操作 -->
             <el-tab-pane label="活动" name="action">
+                <el-timeline :reverse="true" >
+                    <el-timeline-item 
+                        v-for="(item,index) in setOperations"  
+                        placement="top"
+                        :key="index" 
+                        :timestamp="dayjs(item.date).format('YYYY/MM/DD')">
+                        <el-card>
+                            <h4>{{item.operation}}</h4>
+                            <p style="font-size:14px;font-weight:200;">{{item.handler}} 修改于 {{dayjs(item.date).format('YYYY/MM/DD HH:mm:ss')}}</p>
+                        </el-card>
+                    </el-timeline-item>
+                </el-timeline>
+
             </el-tab-pane>
             <!-- 这是修改信息页面 -->
             <el-tab-pane label="设置" name="setting" >
@@ -197,7 +210,7 @@
     import {getSetInformationByName,downloadSet,updateSetInformation,addBrowseCount} from "@/api/pictureSet"
     import {updateAvatar,showAvatar} from "@/api/picture"
     import {isExisted,createCollect,deleteCollect} from "@/api/collect"
-
+    import {getOperations} from "@/api/setOperation"
     import axios from 'axios'
     
     export default {
@@ -266,6 +279,9 @@
                 showManageDataButton:false,
                 //刷新浏览量的key
                 browseKey:0,
+
+                //数据集已有操作
+                setOperations:[""],
 
             }
         },
@@ -339,6 +355,9 @@
                     //更新数据集头像的显示
                     this.loadAvatar()
 
+                    //显示数据集已有的操作的记录
+                    this.getOperationsBySetName()
+
                     //修改监听的数据
                     this.renderKey+=1;
                 })
@@ -346,6 +365,18 @@
                 
                 console.log(this.getData)
                 // console.log(this.PictureSet.name+" == "+this.PictureSet.owner)
+            },
+
+            //加载该数据集已有操作的相关记录
+            getOperationsBySetName(){
+                getOperations(this.pictureSet.name)
+                .then((res)=>{
+                    const{data}=res
+                    this.setOperations=data
+
+                    console.log("数据集已有的操作记录是")
+                    console.log(this.setOperations)
+                })
             },
 
             //获得该用户在该数据集内的权限

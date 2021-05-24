@@ -29,6 +29,11 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import 'dayjs/locale/zh-cn'
 const dayjs=require('dayjs');
 
+//引入时间线组件
+import vuetimeline from "@growthbunker/vuetimeline"
+
+Vue.use(vuetimeline)
+
 //相对时间插件
 dayjs.extend(relativeTime)
 

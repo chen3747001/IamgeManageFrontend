@@ -46,6 +46,7 @@
               type="is-link"
               style="float:right"
               @click="createSet"
+              v-if="token != null"
             >
               创建新的数据集
             </b-button>

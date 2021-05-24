@@ -28,12 +28,14 @@
         <b-navbar-item
           tag="router-link"
           :to="{ path: `/userData/${user.username}/pictureSet` }"
+          v-if="token != null"
         >
           我的数据集
         </b-navbar-item>
         <b-navbar-item
           tag="router-link"
           :to="{ path: 'user/homePage' }"
+          v-if="token != null"
         >
           我的团队
         </b-navbar-item>
@@ -48,7 +50,7 @@
 
 
       <template slot="end">
-        <b-navbar-item tag="div">
+        <!-- <b-navbar-item tag="div">
           <b-field position="is-centered">
             <b-input
               v-model="searchKey"
@@ -68,7 +70,7 @@
               </b-button>
             </p>
           </b-field>
-        </b-navbar-item>
+        </b-navbar-item> -->
 
         <b-navbar-item tag="div">
           <b-switch

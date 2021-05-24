@@ -22,9 +22,9 @@
                     </div>
                 </div>
             </div>
-            <div style="float:right;margin-top:20px;width:200px" :key="this.renderCollectKey">
+            <div style="float:right;margin-top:20px;width:200px" :key="this.renderCollectKey" v-if="token != null">
                 <!-- 显示收藏按钮 -->
-                <div style="float:left;width:40px;margin-bottom:10px">
+                <div style="float:left;width:40px;margin-bottom:10px" >
                     <div v-if="isCollect==false">
                         <el-tooltip class="item" effect="dark" content="点击收藏该数据集" placement="top">
                             <el-button type="danger" icon="el-icon-star-off" circle @click="collectSet"></el-button>
@@ -250,11 +250,12 @@
                 renderCollectKey:0,
 
                 //用户权限相关
+                viewerName:"0",
                 introductionRight:"",
 
                 userRight:{
                     ownerKind:"",
-                    role:"",
+                    role:"参观者",
                     ableAdd:0,
                     ableDelete:0,
                     ableCreateSet:0,
@@ -271,7 +272,10 @@
         created(){
             this.getInformationByName();
             this.getPicInformation();
-            this.isAlreadyCollect();
+            if(this.token!=null){
+                this.isAlreadyCollect();
+            }
+            
         },
         computed: {
             ...mapGetters(['token', 'user'])
@@ -316,7 +320,16 @@
                     console.log("this.pictureSet is: "+this.pictureSet.name+this.pictureSet.owner+this.pictureSet.ownerAvatar)
 
                     //获得用户在该数据集内的权限
-                    this.getUserRight()
+                    if(this.user.username!=null){
+                        this.getUserRight()
+                    }
+                    //用户未登录
+                    else{
+                        //添加一条浏览记录
+                        this.addBrowse()
+                        this.introductionRight="由于未登录，你没有任何权限"
+                    }
+                    
 
                     //初始提交的信息
                     this.ruleForm.bio=this.pictureSet.bio
